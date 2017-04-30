@@ -1,0 +1,19 @@
+#################
+## Node
+#################
+/node_modules
+npm-debug.log
+
+#################
+## Jetbrains
+#################
+.idea
+.idea/
+.idea/**.**
+
+#################
+## Misc
+#################
+.DS_Store
+lib/.DS_Store
+coverage.html

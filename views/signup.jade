@@ -1,0 +1,29 @@
+extends header
+block content
+  div.ui.grid
+    div.four.wide.column
+
+    div.eight.wide.column
+      form.ui.form.segment(method='post',enctype='mulipart/form-data')
+        div.field.required
+          lable 用户名
+          input(placeholder='用户名',type='text',name='name')
+        div.field.required
+          lable 密码
+          input(placeholder='密码',type='password',name='password')
+        div.field.required
+          lable 重复密码
+          input(placeholder='重复密码',type='password',name='repassword')
+        div.field.required
+          lable 性别
+          select.ui.compact.selection.dropdown(name='gender')
+            option(value='m') 男
+            option(value='f') 女
+            option(value='x') 保密
+        div.field.required
+          lable 头像
+          input(type='file',name='avatar')
+        div.field.required
+          lable 个人简介
+          textarea(name='bio',rows='5',v-model='user.bio')
+        input.ui.button.fluid(type='submit',value='注册')
