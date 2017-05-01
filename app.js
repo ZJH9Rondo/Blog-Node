@@ -48,8 +48,8 @@ app.use(flash());
 // 处理表单及文件上传的中间件
 // <-- 不熟悉 -->
 app.use(require('express-formidable')({
-  uploadDir: path.join(__dirname, 'public/img'),// 上传文件目录
-  keepExtensions: true// 保留后缀
+  uploadDir: path.join(__dirname, 'public/images'),// 上传文件目录
+  keepExtensions: true  // 保留后缀
 }));
 
 // 设置模板全局常量
