@@ -1,0 +1,16 @@
+extends header
+
+block content
+  div.ui.grid
+    div.four.wide.column
+      a.avatar(href='/posts?author=#{user.id}',data-title='#{post.author.name}',data-content='#{post.author.bio}')
+        img.avatar(src='../images/#{user.avatar}')
+    div.eight.wide.column
+      form.ui.form.segment(method='post',action='/posts',enctype='multipart/form-data')
+        div.field.required
+          lable 标题
+          input(type='text',name='title')
+        div.field.required
+          lable 内容
+          textarea(name='content',rows='15')
+        input.ui.button(type='submit',value='发布')

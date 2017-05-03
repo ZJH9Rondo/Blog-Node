@@ -1,4 +1,7 @@
 extends header
 
 block content
-  div 这是主页
+  - for(var i = 0;i<posts.length;i++){
+    - var post = posts[i];
+      include components/post-content
+  -}

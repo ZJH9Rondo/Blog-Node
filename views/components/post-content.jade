@@ -1,0 +1,26 @@
+div.post-content
+  div.ui.grid
+    div.four.wide.column
+      a.avatar(href='/posts?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}')
+        img.avatar(src='/images/#{post.author.avatar}')
+    div.eight.wide.column
+      div.ui.segment
+        h3
+          a(href='/posts/#{post._id}') #{post.title}
+          - console.log(post.content)
+        pre!=post.content
+        div
+          span.tag #{post.created_at}
+          span.tag.right
+            span 浏览(#{post.pv})
+            span 留言(#{post.commentCount})
+
+            if user&&post.author._id&&user._id.toString()===post.author._id.toString()
+              div.ui.inline.dropdown
+                div.text
+                i.dropdown.icon
+                div.menu
+                  div.item
+                    a(href='/posts/#{post._id}/edit') 编辑
+                  div.item
+                    a(href='/posts/#{post._id}/remove') 删除

@@ -20,4 +20,9 @@
   * 日志: winston
   * Express日志中间件: express-windston
 
-* 测试版本
+### 问题归纳:
+  * 1.在从数据库读取博文Content时，默认jade引擎读取文本为html字符串？
+    > 问题描述： 由于在上传文章时，用插件将markdown转变成了html，在从数据库读取的时候，由于默认模板引擎用的是jade，所以导致读取后显示在文本中的是包含标签的字符串
+
+    > 解决: 由于使用了 #{post.content} 传入数据，读取直接包含了标签信息。将变量读取从
+    > #{post.content} 更改为 ！=post.content 即可正常
