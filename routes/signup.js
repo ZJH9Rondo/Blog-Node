@@ -3,6 +3,7 @@ var path = require('path');
 var scrypt = require('scrypt');
 var express = require('express');
 var router = express.Router();
+var key = new Buffer('Rondo Blog'); // 用于 scrypt hash加密
 
 var UserModel = require('../models/users');
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
@@ -48,8 +49,8 @@ router.post('/', checkNotLogin, function(req, res, next) {
    return res.redirect('/signup');
  }
 
-  // 密码加密
-  password = scrypt.hash('password');
+  // scrypt hash 密码加密
+  password = scrypt.hashSync(key,{"N":16,"r":1,"p":1},64,'password').toString('hex'); // tostring 必须，转化为字符串存取
 
   // 实例化用户信息
   var user = {

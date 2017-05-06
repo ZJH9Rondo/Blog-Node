@@ -7,7 +7,6 @@ div.post-content
       div.ui.segment
         h3
           a(href='/posts/#{post._id}') #{post.title}
-          - console.log(post.content)
         pre!=post.content
         div
           span.tag #{post.created_at}

@@ -2,15 +2,16 @@ extends header
 
 block content
   div.ui.grid
-    div.four.wide.column
+    div.class.four.wide.column
       a.avatar(href='/posts?author=#{user._id}',data-title='#{user.name}',data-content='#{user.bio}')
-        img.avatar(src='../images/#{user.avatar}')
+        img.avatar(src='/images/#{user.avatar}')
+
     div.eight.wide.column
-      form.ui.form.segment(method='post',action='/posts',enctype='multipart/form-data')
+      form.ui.form.segment(method='post',action='/posts/#{post._id}/edit',enctype='multipart/form-data')
         div.field.required
           lable 标题
-          input(type='text',name='title')
+          input(type='text',name='title',value='#{post.title}')
         div.field.required
           lable 内容
-          textarea(name='content',rows='15')
+          textarea(name='content',rows='15')  #{post.content}
         input.ui.button(type='submit',value='发布')
