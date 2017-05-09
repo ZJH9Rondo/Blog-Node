@@ -12,7 +12,7 @@ div.post-content
           span.tag #{post.created_at}
           span.tag.right
             span 浏览(#{post.pv})
-            span 留言(#{post.commentCount})
+            span 留言(#{post.commentsCount})
 
             if user&&post.author._id&&user._id.toString()===post.author._id.toString()
               div.ui.inline.dropdown

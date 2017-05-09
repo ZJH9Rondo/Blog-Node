@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var PostModel = require('../models/posts');
+var CommentModel = require('../models/comments'); // 留言模块
 
 // 权限检查
 var checkLogin = require('../middlewares/check').checkLogin;
@@ -71,16 +72,19 @@ router.get('/:postId', function(req, res, next) {
 
     Promise.all([
         PostModel.getPostById(postId),// 获取文章信息
+        CommentModel.getComments(postId),// 获取该文章所有留言
         PostModel.incPv(postId)// pv 加 1
       ]).then(function (result) {
           var post = result[0];
+          var comments = result[1]; // 打印观察
 
           if (!post) {
             throw new Error('该文章不存在');
           }
 
           res.render('post', {
-            post: post
+            post: post,
+            comments: comments
           });
         })
         .catch(next);
@@ -118,7 +122,7 @@ router.post('/:postId/edit', checkLogin, function(req, res, next) {
   .then(function () {
     req.flash('success', '编辑文章成功');
     // 编辑成功后跳转到上一页
-    res.redirect('/posts/${postId}');
+    res.redirect(`/posts/${postId}`); // 注意字符 ``
   })
     .catch(next);
 });
@@ -139,12 +143,36 @@ router.get('/:postId/remove', checkLogin, function(req, res, next) {
 
 // POST /posts/:postId/comment 创建一条留言
 router.post('/:postId/comment', checkLogin, function(req, res, next) {
-  res.send(req.flash());
+  var author = req.session.user._id;
+  var postId = req.params.postId;
+  var content = req.fields.content;
+  var comment = {
+      author: author,
+      postId: postId,
+      content: content
+  };
+
+  CommentModel.create(comment)
+    .then(function () {
+      req.flash('success', '留言成功');
+      // 留言成功后跳转到上一页
+      res.redirect('back');
+    })
+    .catch(next);
 });
 
 // GET /posts/:postId/comment/:commentId/remove 删除一条留言
 router.get('/:postId/comment/:commentId/remove', checkLogin, function(req, res, next) {
-  res.send(req.flash());
+  var commentId = req.params.commentId;
+  var author = req.session.user._id;
+
+  CommentModel.delCommentById(commentId, author)
+  .then(function () {
+    req.flash('success', '删除留言成功');
+    // 删除成功后跳转到上一页
+    res.redirect('back');
+  })
+  .catch(next);
 });
 
 module.exports = router;

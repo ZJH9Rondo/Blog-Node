@@ -1,8 +1,10 @@
 {
   "name": "test",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
+  "main": "app.js",
   "scripts": {
+    "test": "node --harmony ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -25,5 +27,10 @@
     "scrypt": "^6.0.3",
     "serve-favicon": "^2.4.2",
     "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "mocha": "^3.3.0",
+    "supertest": "^3.0.0"
   }
 }

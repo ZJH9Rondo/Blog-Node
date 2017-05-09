@@ -1,0 +1,8 @@
+# git 更新配置文件
+# 过滤 log 和 node_modules
+
+config/*
+!config/default.*
+npm-debug.log
+node_modules
+coverage

@@ -1,7 +1,8 @@
 // signin 登录页
 var express = require('express');
 var router = express.Router();
-
+var scrypt = require('scrypt');
+var key = new Buffer('Rondo Blog'); // 用于 scrypt hash加密
 var UserModel = require('../models/users');
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 
@@ -15,14 +16,16 @@ router.post('/', checkNotLogin, function(req, res, next) {
 
   var name = req.fields.name;
   var password = req.fields.password;
+  var pwdFlag = scrypt.hashSync(key,{"N":16,"r":1,"p":1},64,'password').toString('hex');
 
-UserModel.getUserByName(name).then(function (user) {
+  UserModel.getUserByName(name)
+  .then(function (user) {
     if (!user) {
       req.flash('error', '用户不存在');
       return res.redirect('back');
     }
     // 检查密码是否匹配
-    if (password !== user.password) {
+    if (pwdFlag !== user.password) {
       req.flash('error', '用户名或密码错误');
       return res.redirect('back');
     }

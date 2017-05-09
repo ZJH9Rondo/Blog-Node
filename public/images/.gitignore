@@ -1,0 +1,5 @@
+# 忽略头像文件，但上传保存当前目录
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
