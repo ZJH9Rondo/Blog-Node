@@ -1,16 +1,19 @@
 extends header
 
 block content
-  div.ui.grid
-    div.four.wide.column
-      a.avatar(href='/posts?author=#{user._id}',data-title='#{user.name}',data-content='#{user.bio}')
-        img.avatar(src='../images/#{user.avatar}')
-    div.eight.wide.column
-      form.ui.form.segment(method='post',action='/posts',enctype='multipart/form-data')
-        div.field.required
-          lable 标题
-          input(type='text',name='title')
-        div.field.required
-          lable 内容
-          textarea(name='content',rows='15')
-        input.ui.button(type='submit',value='发布')
+  div.content
+    div.create-article
+      div.editor-front
+        img(src='/images/#{user.avatar}')
+      p.editor
+        a(href='/posts?author=#{user._id}',data-title='',data-content='#{user.bio}')  #{user.name}
+
+      div.create-form
+        form.ui.form.segment(method='post',action='/posts',enctype='multipart/form-data')
+          div.field.required
+            lable 标题
+            input(type='text',name='title')
+          div.field.required
+            lable 内容
+            textarea(name='content',rows='15')
+          input(type='submit',value='发布')

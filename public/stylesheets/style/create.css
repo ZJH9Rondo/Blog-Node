@@ -1,0 +1,19 @@
+/*-----写博客样式表-------*/
+.create-article,
+.create-form {
+  width: 95%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+.create-form>form>input {
+  width: 80px;
+  color: #fff;
+  height: 30px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: 0;
+  background: #009a61;
+}

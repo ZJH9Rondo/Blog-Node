@@ -1,7 +1,19 @@
 div.nav
-  div.ui.grid
-    div.four.wide.column
-    div.eight.wide.column
-      a(href='/posts')
-        h1 #{blog.title}
-      p #{blog.description}
+  ul.nav_Menu
+    li
+      a(href='/') 首页
+    li
+      a(href='/') 首页
+  div.nav-setting
+    div.ui.buttons
+      div.ui.dropdown.floating.button
+        i.icon.bars
+        div.menu
+          if user
+            a.item(href='/posts?author=#{user._id}') 个人主页
+            div.divider
+            a.item(href='/posts/create') 发表文章
+            a.item(href='/signout') 登出
+          else
+            a.item(href='/signin') 登录
+            a.item(href='/signup') 注册

@@ -1,0 +1,100 @@
+/*-----全局样式-------*/
+/*-----stylus----*/
+body {
+  width: 100%;
+  height: 100%;
+  min0-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a {
+  text-decoration: none;
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.content {
+  clear: both;
+  height: auto;
+  min-height: 100%;
+  position: relative;
+  top: 50px;
+  margin-left: 300px;
+  padding: 10px;
+/*--------front----------*/
+}
+.front {
+  max-width: 100%;
+  height: auto;
+/*---------user-----------*/
+}
+.user_Inf {
+  width: 300px;
+  min-height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("../images/user_bg-01.jpg");
+  background-size: 100% 100%;
+  z-index: 9999;
+}
+.user-cover {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+  background: rgba(85,85,85,0.4);
+}
+.user_Img {
+  min-width: 100%;
+  height: 300px;
+}
+.admin_front {
+  width: 150px;
+  height: 150px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 80px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  border: 1px solid #ffd700;
+}
+.user_Img>p {
+  width: auto;
+  height: 20px;
+  margin-top: 10px;
+  text-align: center;
+}
+.user_footer {
+  width: 100%;
+  height: 200px;
+  position: absolute;
+  bottom: 0;
+}
+.user_footer>p {
+  width: 100%;
+  height: 66.66666666666667px;
+}

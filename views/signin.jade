@@ -1,9 +1,8 @@
 extends header
 
 block content
-  div.ui.grid
-    div.four.wide.column
-    div.eight.wide.column
+  div.content
+    div.sign_form
       form.ui.form.segment(method='post',enctype="multipart/form-data")
         div.field.required
           lable 用户名
@@ -11,4 +10,4 @@ block content
         div.field.required
           lable 密码
           input(placeholder='密码',type='password',name='password')
-        input.ui.button.fluid(type='submit',value='登录')
+        input.sign_button(type='submit',value='登录')
