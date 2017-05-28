@@ -6,8 +6,9 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     minifyCss = require('gulp-minify-css');
 
+var js_Src = './public/javascripts/';
+// 基于stylus进行预编译输出
 gulp.task('stylus',function (){
-  // 默认任务
   gulp.src('./public/stylesheets/stylus/*.styl')
     .pipe(plumber())
     .pipe(stylus())
@@ -19,6 +20,7 @@ gulp.task('watch',function (){
   gulp.watch('./public/stylesheets/stylus/*.styl',['stylus']);
 });
 
+// 压缩css文件
 gulp.task('concatCss', function() {
     gulp.src(['./public/stylesheets/style/*.css'])
         .pipe(concat('style.css'))
@@ -28,7 +30,17 @@ gulp.task('concatCss', function() {
 
 gulp.watch('./public/stylesheets/style/*.css', ['concatCss']);
 
+// 压缩合并js文件
+gulp.task('uglify',function (){
+  gulp.src([js_Src+'main.js',js_Src+'require.js'])
+      .pipe(uglify())
+      .pipe(gulp.dest('./public/javascripts'));
+});
+
+gulp.watch('./public/javascripts/*.js',['uglify']);
+
 gulp.task('default', [
   'stylus',
+  'uglify',
   'watch'
 ]);
