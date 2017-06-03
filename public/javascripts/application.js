@@ -1,8 +1,8 @@
 // 主入口文件
 requirejs.config({
-    baseUrl: "/javascripts/scripts",
+    baseUrl: "/javascripts/scripts", // 配置默认访问路径
 });
 
-requirejs(['GM','nav'],function(GM,nav){
-    
+requirejs(['GM','page'],function(GM,page){
+
 });

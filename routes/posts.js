@@ -1,8 +1,13 @@
 // version 1.0.0
 var express = require('express');
 var router = express.Router();
+var https = require('https');
+var urllib = require('url');
+var iconv = require('iconv-lite');
+var cheerio = require('cheerio');
 var PostModel = require('../models/posts');
 var CommentModel = require('../models/comments'); // 留言模块
+var url = 'https://github.com/ZJH9Rondo';
 
 // 权限检查
 var checkLogin = require('../middlewares/check').checkLogin;
@@ -17,9 +22,88 @@ router.get('/',function (req,res,next){
   PostModel.getPosts(author).then(function (posts) {
       res.render('posts', {
         posts: posts
-    });
+      });
   })
   .catch(next);
+
+});
+
+router.get('/ajax',function (req,res){
+  var params = urllib.parse(req.url,true),
+      pathname = urllib.parse(req.url,true).pathname, // 处理Ajax请求url链接
+      data,
+      github = {}, // 储存爬虫爬取后页面处理的数据对象
+      repositories = [], //存放github仓库爬取数据
+      floow = [], // 存放github仓库floows数据
+      textGray = []; // 存放仓库标签
+
+// 设置回调函数,防止出现接收到Ajax请求之后
+// 返回空数据对象
+// 回调函数设置接收到爬虫处理的数据对象后响应Ajax请求
+  function getGithub(github,callback){
+    callback(github);
+  }
+
+// Ajax跨域回调函数
+  function jsonpData(github){
+    // 处理数据
+    data = params.query.callback + '(' + JSON.stringify(github) +')';
+    res.end(data); // 此处的 res 属于Ajax请求 非 https
+  }
+
+// Ajax同源回调函数
+  function jsonData(github){
+    data = JSON.stringify(github);
+    console.log(data);
+    res.end(data);
+  }
+
+    https.get(url,function (res,err){
+      var dom = []; // 存入响应页面
+
+      if(err){
+        console.log(err);
+        return;
+      }
+
+      res.on('data',function (chunk){
+        dom.push(chunk);
+      });
+
+      res.on('end',function (){
+        var html = iconv.decode(Buffer.concat(dom), 'utf-8'),
+        $ = cheerio.load(html,{decodeEntities: false});
+
+        // 处理github页面floowing
+        $('.underline-nav-item').slice(1,4).each(function (i,element){
+          var text = $(this).text().replace(/^[\s　]+|[\s　]+$/g,""); // 正则去掉全角半角空格
+
+          text = text.replace(/[\r\n]/g,"");
+          floow.push(text);
+        });
+
+        // 处理github respositories
+        $('.repo').each(function (i,element){
+          repositories.push($(this).text());
+        });
+
+        // 处理 github respositories 标签
+        $('.mb-0').each(function (i,element){
+            var text = $(this).text().replace(/^[\s　]+|[\s　]+$/g,""); // 正则去掉全角半角空格
+
+            text = text.replace(/[\r\n]/g,"");
+            textGray.push(text);
+        });
+
+        github = {
+          repositories: repositories,
+          floow: floow,
+          textGray: textGray
+        };
+
+        getGithub(github,jsonData);
+      });
+    });
 });
 
 // GET /posts/create 发表文章页

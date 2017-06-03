@@ -27,9 +27,10 @@
     "scrypt": "^6.0.3",
     "serve-favicon": "^2.4.2",
     "winston": "^2.3.1",
-    "requirejs":  "^2.3.3"
+    "requirejs": "^2.3.3"
   },
   "devDependencies": {
+    "cheerio": "^1.0.0-rc.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-livereload": "^3.8.1",
