@@ -49,13 +49,15 @@
 
   * 4.对于requirejs的使用,使用前需要理解其加载原理，为什么要基于AMD规范异步加载js,相比CMD的同步加载和原始加载方法有什么优势,一开始应该如何规划文件模块。
     * 配置加载路径
-        javascripts
+       ```
+         javascripts
           |-scripts
           |   |--GM.js
           |   |--nav.js
           |
           |-application.js
           |-require.js
+       ```
     * 关于application.js的配置
 
   * 5.关于封装Ajax
