@@ -60,13 +60,20 @@ define(['GM'],function (GM){
 
   // 获取后台爬取的github数据信息
   // 首页处理数据展示
-  var Ajax = GM.ajax();
-  Ajax.init({
-    url: "/posts/ajax",
-    datatype: "json",
-    method: "get",
-    success: function (data){
-      console.log(data);
+  (function (){
+    var Ajax = GM.ajax(); // 实例化一个Ajax对象
+
+    if(sessionStorage.getItem("github")){ // 设置优先从缓存读取
+      console.log(sessionStorage.getItem("github"));
+    }else{
+      Ajax.init({
+        url: "/posts/ajax",
+        datatype: "json",
+        method: "get",
+        success: function (data){
+          sessionStorage.setItem("github",data);
+        }
+      });
     }
-  });
+  })();
 });

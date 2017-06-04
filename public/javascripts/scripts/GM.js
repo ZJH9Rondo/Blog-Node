@@ -131,7 +131,6 @@ define(function(){
                     function complete(){
                       if(xhr.readyState == 4){
                         if((xhr.status >= 200 && xhr.status <300) || xhr.status == 304){
-                            console.log(xhr.status);
                             // 未对返回的JSON做处理
                             // 勿用 statusText == 'success' 做判定条件 不适用跨浏览器场景
                             if(params.success){

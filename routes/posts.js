@@ -28,82 +28,83 @@ router.get('/',function (req,res,next){
 
 });
 
+// 响应Ajax请求 返回github 爬取数据
+// 回调函数响应，防止返回空
 router.get('/ajax',function (req,res){
-  var params = urllib.parse(req.url,true),
-      pathname = urllib.parse(req.url,true).pathname, // 处理Ajax请求url链接
-      data,
-      github = {}, // 储存爬虫爬取后页面处理的数据对象
-      repositories = [], //存放github仓库爬取数据
-      floow = [], // 存放github仓库floows数据
-      textGray = []; // 存放仓库标签
+    var params = urllib.parse(req.url,true),
+        pathname = urllib.parse(req.url,true).pathname; // 处理Ajax请求url链接
 
-// 设置回调函数,防止出现接收到Ajax请求之后
-// 返回空数据对象
-// 回调函数设置接收到爬虫处理的数据对象后响应Ajax请求
-  function getGithub(github,callback){
-    callback(github);
+  // 设置回调函数,防止出现接收到Ajax请求之后
+  // 返回空数据对象
+  // 回调函数设置接收到爬虫处理的数据对象后响应Ajax请求
+    function getGithub(github,callback){
+      callback(github);
   }
 
-// Ajax跨域回调函数
-  function jsonpData(github){
-    // 处理数据
-    data = params.query.callback + '(' + JSON.stringify(github) +')';
-    res.end(data); // 此处的 res 属于Ajax请求 非 https
+  // Ajax跨域回调函数
+    function jsonpData(github){
+      // 处理数据
+      data = params.query.callback + '(' + JSON.stringify(github) +')';
+      res.end(data); // 此处的 res 属于Ajax请求 非 https
   }
 
-// Ajax同源回调函数
-  function jsonData(github){
-    data = JSON.stringify(github);
-    console.log(data);
-    res.end(data);
-  }
+  // Ajax同源回调函数
+    function jsonData(github){
+      data = JSON.stringify(github);
+      res.end(data);
+   }
 
-    https.get(url,function (res,err){
-      var dom = []; // 存入响应页面
+   https.get(url,function (res,err){
+     var  data,
+          github = {}, // 储存爬虫爬取后页面处理的数据对象
+          repositories = [], //存放github仓库爬取数据
+          floow = [], // 存放github仓库floows数据
+          textGray = [], // 存放仓库标签
+          dom = []; // 存入响应页面
 
-      if(err){
-        console.log(err);
-        return;
-      }
+     if(err){
+       console.log(err);
+       return;
+     }
 
-      res.on('data',function (chunk){
-        dom.push(chunk);
-      });
+     res.on('data',function (chunk){
+       dom.push(chunk);
+     });
 
-      res.on('end',function (){
-        var html = iconv.decode(Buffer.concat(dom), 'utf-8'),
-        $ = cheerio.load(html,{decodeEntities: false});
+     res.on('end',function (){
+       var html = iconv.decode(Buffer.concat(dom), 'utf-8'),
+       $ = cheerio.load(html,{decodeEntities: false});
 
-        // 处理github页面floowing
-        $('.underline-nav-item').slice(1,4).each(function (i,element){
-          var text = $(this).text().replace(/^[\s　]+|[\s　]+$/g,""); // 正则去掉全角半角空格
+       // 处理github页面floowing
+       $('.underline-nav-item').slice(1,4).each(function (i,element){
+         var text = $(this).text().replace(/^[\s　]+|[\s　]+$/g,""); // 正则去掉全角半角空格
 
-          text = text.replace(/[\r\n]/g,"");
-          floow.push(text);
-        });
+         text = text.replace(/[\r\n]/g,"");
+         floow.push(text);
+       });
 
-        // 处理github respositories
-        $('.repo').each(function (i,element){
-          repositories.push($(this).text());
-        });
+       // 处理github respositories
+       $('.repo').each(function (i,element){
+         repositories.push($(this).text());
+       });
 
-        // 处理 github respositories 标签
-        $('.mb-0').each(function (i,element){
-            var text = $(this).text().replace(/^[\s　]+|[\s　]+$/g,""); // 正则去掉全角半角空格
+       // 处理 github respositories 标签
+       $('.mb-0').each(function (i,element){
+           var text = $(this).text().replace(/^[\s　]+|[\s　]+$/g,""); // 正则去掉全角半角空格
 
-            text = text.replace(/[\r\n]/g,"");
-            textGray.push(text);
-        });
+           text = text.replace(/[\r\n]/g,"");
+           textGray.push(text);
+       });
 
-        github = {
-          repositories: repositories,
-          floow: floow,
-          textGray: textGray
-        };
-
-        getGithub(github,jsonData);
-      });
-    });
+       github = {
+         repositories: repositories,
+         floow: floow,
+         textGray: textGray
+       };
+       
+       getGithub(github,jsonData);
+     });
+   });
 });
 
 // GET /posts/create 发表文章页
