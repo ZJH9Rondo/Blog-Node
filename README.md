@@ -25,7 +25,7 @@
   * gulp构建自动化
   * requirejs模块化加载
 
-###改动
+### 改动
   * 通过在github看了一些关于在Express中通过scrypt对注册密码进行hash加密的使用,对原本项目中的加密方法进行了更改
   * 开源项目的模板是模板引擎是基于ejs，但是在此项目是基于jade模板引擎，对于其中的模板变量需要更改为jade的语法，详见jade模板指南
   * 加入article单独文章页面，基于stylus预编译对views的css进行了重构，其中有一个stylus的纯方法文件，作为依赖@import到各个所需的styl预编译文件中
@@ -49,13 +49,15 @@
 
   * 4.对于requirejs的使用,使用前需要理解其加载原理，为什么要基于AMD规范异步加载js,相比CMD的同步加载和原始加载方法有什么优势,一开始应该如何规划文件模块。
     * 配置加载路径
-        javascripts
+       ```
+         javascripts
           |-scripts
           |   |--GM.js
           |   |--nav.js
           |
           |-application.js
           |-require.js
+       ```
     * 关于application.js的配置
 
   * 5.关于封装Ajax
