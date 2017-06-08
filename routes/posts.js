@@ -6,6 +6,7 @@ var urllib = require('url');
 var iconv = require('iconv-lite');
 var cheerio = require('cheerio');
 var PostModel = require('../models/posts');
+var Users = require('../models/users');
 var CommentModel = require('../models/comments'); // 留言模块
 var url = 'https://github.com/ZJH9Rondo';
 
@@ -25,7 +26,6 @@ router.get('/',function (req,res,next){
       });
   })
   .catch(next);
-
 });
 
 // 响应Ajax请求 返回github 爬取数据
@@ -101,10 +101,39 @@ router.get('/ajax',function (req,res){
          floow: floow,
          textGray: textGray
        };
-       
+
        getGithub(github,jsonData);
      });
    });
+});
+
+// 跳转到用户文章收藏页
+router.get('/collection',checkLogin,function (req,res,next){
+      // 识别当前登录用户
+      var author = req.query.author;
+
+      Users.getCollections(author).then(function (result){
+
+          var article = result.collections;
+        // 根据返回的用户收藏文章Id
+        // 查询对应文章
+         PostModel.getCollect(article).then(function (collections){
+            res.render('collections',{
+              collections: collections
+            });
+         });
+      });
+});
+
+// 收藏文章
+router.get('/collect',checkLogin,function (req,res,next){
+      // 根据文章Id 识别当前收藏文章
+      var author = req.query.author,
+          post = req.query.post;
+
+      Users.addCollect(author,post).then(function (result){
+        req.flash('success',"收藏成功");
+      }).catch(next);
 });
 
 // GET /posts/create 发表文章页

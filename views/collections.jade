@@ -1,0 +1,9 @@
+extends header
+
+block content
+  div.content
+    div.content-left
+      - for(var i = 0;i<collections.length;i++){
+        - var post = collections[i];
+          include components/post-content
+      -}

@@ -21,6 +21,7 @@ router.post('/', checkNotLogin, function(req, res, next) {
   var avatar = req.files.avatar.path.split(path.sep).pop();
   var password = req.fields.password;
   var repassword = req.fields.repassword;
+  var collections = [];
 
   // 校验参数
  try {
@@ -58,7 +59,8 @@ router.post('/', checkNotLogin, function(req, res, next) {
     password: password,
     gender: gender,
     bio: bio,
-    avatar: avatar
+    avatar: avatar,
+    collections: collections  // 用户收藏文章集
   };
 
   // 写入数据库

@@ -2,6 +2,7 @@
 define(['GM'],function (GM){
   var nav_SlideBar = GM.getDom('#nav_SlideBar'),
       nav_Item = GM.getDom('.nav_Menuitem'),
+      collect = GM.getDom('.collect'),
       getAjax = GM.getDom('#ajax');
   // nav-setting dropdown
   (function (){
@@ -16,7 +17,7 @@ define(['GM'],function (GM){
           timer;
 
       function slideBar(i){
-              GM.addEventHandler(nav_Item[i],"mouseover",function (){
+              GM.addEventHandler(nav_Item[i],"mouseover",function (event){
                   var speed = 0;
 
                   start = nav_SlideBar.offsetLeft;
@@ -76,4 +77,16 @@ define(['GM'],function (GM){
       });
     }
   })();
+
+    // 收藏文章
+    // 绑定点击事件
+    (function (){
+        for(var i = 0;i < collect.length ; i++){
+          GM.addEventHandler(collect[i],"click",function (event){
+               var img = this.childNodes[0];
+
+               img.style.background = 'green'; 
+          });
+        }
+    })();
 });

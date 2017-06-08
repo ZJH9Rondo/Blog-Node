@@ -10,12 +10,23 @@ div.article-item
       div.article-about
         span.tag #{post.created_at}
         span.tag.right
-          span 浏览(#{post.pv})
-          span 留言(#{post.commentsCount})
+          span
+            img(src='/images/browse.svg')
+            span #{post.pv}
+          span
+            img(src='/images/comments.svg')
+            span #{post.commentsCount}
+          if user
+            span.favourite
+              img(src='/images/good.svg')
+              span 0
+            span.collect
+              a(href='/posts/collect?author=#{user._id}&post=#{post._id}')
+                img(src='/images/favourite.svg')
 
-          if user&&post.author._id&&user._id.toString()===post.author._id.toString()
-            div.writer-edit
-              button.item
-                a(href='/posts/#{post._id}/edit') 编辑
-              button.item
-                a(href='/posts/#{post._id}/remove') 删除
+        if user&&post.author._id&&user._id.toString()===post.author._id.toString()
+          div.writer-edit
+            button.item
+              a(href='/posts/#{post._id}/edit') 编辑
+            button.item
+              a(href='/posts/#{post._id}/remove') 删除

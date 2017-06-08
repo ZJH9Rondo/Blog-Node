@@ -19,7 +19,6 @@ div.comments
             if user&&comment.author._id&&user._id.toString()===comment.author._id.toString()
               a.reply(href='/posts/#{post._id}/comment/#{comment._id}/remove') 删除
 
-
     div.comment-form
       form.ui.reply.form(method='post',action='/posts/#{post._id}/comment',enctype='multipart/form-data')
         div.comment-field

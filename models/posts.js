@@ -53,6 +53,7 @@ module.exports = {
   },
 
   // 按创建时间降序获取所有用户文章或者某个特定用户的所有文章
+  // 截取 URL 后的 user_Id 来进行区分
   getPosts: function getPosts(author) {
     var query = {};
     if (author) {
@@ -66,6 +67,14 @@ module.exports = {
       .addCommentsCount()
       .contentToHtml()
       .exec();
+  },
+
+  // 获取对应的收藏文章
+  getCollect: function getCollect(collections){
+     return Post
+     .find({_id: {$in: collections}})
+     .populate({ path: 'author', model:'User'})
+     .exec();
   },
 
   // 通过文章 id 给 pv 加 1
