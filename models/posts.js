@@ -74,6 +74,9 @@ module.exports = {
      return Post
      .find({_id: {$in: collections}})
      .populate({ path: 'author', model:'User'})
+     .addCreatedAt()
+     .addCommentsCount()
+     .contentToHtml()
      .exec();
   },
 

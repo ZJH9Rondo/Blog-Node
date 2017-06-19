@@ -39,6 +39,14 @@ module.exports = {
         .exec();
     },
 
+    // 取消收藏
+    adoptCollect: function adoptCollect(author,post){
+        // 取消当前已收藏的文章
+        return User
+        .update({_id:author},{$pull:{collections: post}})
+        .exec();
+    },
+
     // 获取登录用户收藏文章
     getCollections: function (author){
 

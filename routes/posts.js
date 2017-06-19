@@ -131,9 +131,32 @@ router.get('/collect',checkLogin,function (req,res,next){
       var author = req.query.author,
           post = req.query.post;
 
-      Users.addCollect(author,post).then(function (result){
-        req.flash('success',"收藏成功");
-      }).catch(next);
+      Users.getCollections(author).then(function (result){
+        var collections = result.collections,
+            flag = false;
+
+        // 防止重复添加收藏数据
+        // 二次点击 取消收藏( 数据量增大后，可优化查找算法 )
+        for(var i in collections){
+          if( post === collections[i]){
+            flag = true;
+          }
+        }
+
+        if(flag){
+          // 取消收藏
+          Users.adoptCollect(author,post).then(function (){
+
+            res.redirect('back');
+          }).catch(next);
+        }else{
+          // 收藏文章
+          Users.addCollect(author,post).then(function (){
+
+            res.redirect('back');
+          }).catch(next);
+        }
+      });
 });
 
 // GET /posts/create 发表文章页
@@ -161,7 +184,7 @@ router.post('/', checkLogin, function(req, res, next) {
     return res.redirect('back');
   }
 
-  // mongdodb 实体 当前
+  // blog _post实体 当前
   var post = {
    author: author,
    title: title,

@@ -85,7 +85,7 @@ define(['GM'],function (GM){
           GM.addEventHandler(collect[i],"click",function (event){
                var img = this.childNodes[0];
 
-               img.style.background = 'green'; 
+               img.childNodes[0].src = '/images/collect_success.svg'; // 收藏成功 切换标识
           });
         }
     })();
