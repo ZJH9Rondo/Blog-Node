@@ -38,7 +38,6 @@
     "gulp-plumber": "^1.0.0",
     "gulp-stylus": "^2.6.0",
     "gulp-uglify": "^2.1.2",
-    "istanbul": "^0.4.5",
     "mocha": "^3.3.0",
     "supertest": "^3.0.0"
   }

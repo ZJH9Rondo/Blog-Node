@@ -20,7 +20,7 @@
   * 日志: winston
   * Express日志中间件: express-windston
   * gitignore过滤文件
-  * 配置基本测试: mocha 和 supertest
+  * 配置基本单元测试: mocha 和 supertest
   * 基于 stylus 进行css的预编译
   * gulp构建自动化
   * requirejs模块化加载
@@ -35,6 +35,10 @@
   * 封装Ajax
   * sessionStorage 和 localStorage
   * 爬虫爬取github主页信息处理数据整合后展示到博客首页
+  * 添加用户收藏文章功能，添加独立的用户文章收藏集页面，读取当前登录用户收藏的文章。
+    > 收藏功能通过Ajax异步与后台交互，通过查询当前数据库中该用户是否收藏过该文章，从而判定当前行为应是添加收藏还是取消收藏。
+
+    > 收藏功能BUG: 当前判定添加取消收藏功能中对数据库查询存在无法正常获取最新数据阶段，一段时间后会正常返回，很快会修复。
 
 ### 问题归纳:
   * 1.在从数据库读取博文Content时，默认jade引擎读取文本为html字符串？
@@ -86,9 +90,4 @@
     （极端情况除外）
 
   * 7.爬虫爬取github
-    > 由于博客基于http协议访问,但github爬虫需要使用 https 模块进行抓取,虽然抓取一切正常,但是对于其中可能涉及的问题还没有一个直观的衡量,
-  期间也算逐渐接触了Node异步编程容易出现的问题
-    > 诸如此类...
-    ```
-      Error: Can't set headers after they are sent.
-    ```
+    > 由于博客基于http协议访问,但github爬虫需要使用 https 模块进行抓取,虽然抓取一切正常,但是对于其中可能涉及的问题还没有一个直观的衡量
