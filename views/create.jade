@@ -9,7 +9,7 @@ block content
         a(href='/posts?author=#{user._id}',data-title='',data-content='#{user.bio}')  #{user.name}
 
       div.create-form
-        form.ui.form.segment(method='post',action='/posts',enctype='multipart/form-data')
+        form.ui.form.segment(method='post',action='/posts/create/submit',enctype='multipart/form-data')
           div.field.required
             lable 标题
             input(type='text',name='title')

@@ -1,6 +1,7 @@
 // 连接文章模型
 var marked = require('marked'); //markdown 中间件，支持markdown语法
 var Post = require('../lib/mongo').Post;
+var Collects = require('../lib/mongo').Collects; // 文章收藏模块
 
 var CommentModel = require('./comments');
 
@@ -71,6 +72,7 @@ module.exports = {
 
   // 获取对应的收藏文章
   getCollect: function getCollect(collections){
+
      return Post
      .find({_id: {$in: collections}})
      .populate({ path: 'author', model:'User'})
@@ -78,6 +80,13 @@ module.exports = {
      .addCommentsCount()
      .contentToHtml()
      .exec();
+  },
+
+  // 获取登录用户收藏文章
+  getCollections: function getCollections(author){
+      return  Collects
+      .findOne({author: author},{collections: 1,_id: 0})
+      .exec();
   },
 
   // 通过文章 id 给 pv 加 1

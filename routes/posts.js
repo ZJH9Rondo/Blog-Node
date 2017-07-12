@@ -13,24 +13,55 @@ var url = 'https://github.com/ZJH9Rondo';
 // 权限检查
 var checkLogin = require('../middlewares/check').checkLogin;
 
-// GET /posts 所有用户或特定用户的文章页
-//  eg: GET /posts?author=xxx
-
+// 首页路由
 router.get('/',function (req,res,next){
   // author 区分用户页和主页
   var author = req.query.author;
 
-  PostModel.getPosts(author).then(function (posts) {
-      res.render('posts', {
-        posts: posts
-      });
-  })
-  .catch(next);
+  PostModel.getPosts(author).then(function (result) {
+      var posts = result;
+
+      if(req.session.user){
+        var authorCollected = req.session.user._id;
+
+        PostModel.getCollections(authorCollected).then(function (result){
+          var collections = result.collections;
+
+           res.render('posts', {
+            posts: posts,
+            collections: collections
+          });
+        });
+      }else{
+          res.render('posts',{
+            posts: posts
+          });
+      }
+  });
 });
+
+// 用户主页
+router.get('/user',checkLogin,function (req,res,next){
+  // author 区分用户页和主页
+  var author = req.query.author;
+
+  PostModel.getPosts(author).then(function (result) {
+      var posts = result;
+      PostModel.getCollections(author).then(function (result){
+        var collections = result.collections;
+
+         res.render('posts', {
+          posts: posts,
+          collections: collections
+        });
+      });
+  });
+});
+
 
 // 响应Ajax请求 返回github 爬取数据
 // 回调函数响应，防止返回空
-router.get('/ajax',function (req,res){
+router.get('/github',function (req,res){
     var params = urllib.parse(req.url,true),
         pathname = urllib.parse(req.url,true).pathname; // 处理Ajax请求url链接
 
@@ -73,7 +104,7 @@ router.get('/ajax',function (req,res){
 
      res.on('end',function (){
        var html = iconv.decode(Buffer.concat(dom), 'utf-8'),
-       $ = cheerio.load(html,{decodeEntities: false});
+            $ = cheerio.load(html,{decodeEntities: false});
 
        // 处理github页面floowing
        $('.underline-nav-item').slice(1,4).each(function (i,element){
@@ -112,12 +143,13 @@ router.get('/collection',checkLogin,function (req,res,next){
       // 识别当前登录用户
       var author = req.query.author;
 
-      Users.getCollections(author).then(function (result){
+      PostModel.getCollections(author).then(function (result){
 
-          var article = result.collections;
+          var articles = result.collections;
+          console.log(articles);
         // 根据返回的用户收藏文章Id
         // 查询对应文章
-         PostModel.getCollect(article).then(function (collections){
+         PostModel.getCollect(articles).then(function (collections){
             res.render('collections',{
               collections: collections
             });
@@ -131,30 +163,33 @@ router.get('/collect',checkLogin,function (req,res,next){
       var author = req.query.author,
           post = req.query.post;
 
-      Users.getCollections(author).then(function (result){
-        var collections = result.collections,
-            flag = false;
-
-        // 防止重复添加收藏数据
-        // 二次点击 取消收藏( 数据量增大后，可优化查找算法 )
-        for(var i in collections){
-          if( post === collections[i]){
+      PostModel.getCollections(author).then(function (result){
+      var articles = result.collections,
+          flag = false;
+        console.log(articles);
+        if(articles.length === 0){
             flag = true;
-          }
         }
-
         if(flag){
-          // 取消收藏
-          Users.adoptCollect(author,post).then(function (){
-
-            res.redirect('back');
-          }).catch(next);
-        }else{
           // 收藏文章
-          Users.addCollect(author,post).then(function (){
+          Users.addCollect(author,post).then(function (result){
+            var status = {
+              flag: flag
+            };
 
-            res.redirect('back');
-          }).catch(next);
+            status = JSON.stringify(status);
+            res.end(status);
+          });
+        }else{
+          // 取消收藏
+          Users.adoptCollect(author,post).then(function (result){
+            var status = {
+              flag: flag
+            };
+
+            status = JSON.stringify(status);
+            res.end(status);
+          });
         }
       });
 });
@@ -165,7 +200,7 @@ router.get('/create', checkLogin, function(req, res, next) {
 });
 
 // POST /posts 发表一篇文章
-router.post('/', checkLogin, function(req, res, next) {
+router.post('/create/submit', checkLogin, function(req, res, next) {
     // 基本信息
     var author = req.session.user._id;
     var title = req.fields.title;
@@ -181,7 +216,7 @@ router.post('/', checkLogin, function(req, res, next) {
     }
   } catch (e) {
     req.flash('error', e.message);
-    return res.redirect('back');
+    res.redirect('back');
   }
 
   // blog _post实体 当前
@@ -199,8 +234,7 @@ router.post('/', checkLogin, function(req, res, next) {
       req.flash('success', '发表成功');
       // 发表成功后跳转到该文章页
       res.redirect(`/posts/${post._id}`); // 必须使用 ``，否则读取不成功
-    })
-    .catch(next);
+    });
 });
 
 // GET /posts/:postId 单独一篇的文章页
@@ -219,7 +253,7 @@ router.get('/:postId', function(req, res, next) {
             throw new Error('该文章不存在');
           }
 
-          res.render('post', {
+           res.render('post', {
             post: post,
             comments: comments
           });

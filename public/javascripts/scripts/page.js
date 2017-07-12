@@ -2,8 +2,7 @@
 define(['GM'],function (GM){
   var nav_SlideBar = GM.getDom('#nav_SlideBar'),
       nav_Item = GM.getDom('.nav_Menuitem'),
-      collect = GM.getDom('.collect'),
-      getAjax = GM.getDom('#ajax');
+      collect = GM.getDom('.addcollect');
   // nav-setting dropdown
   (function (){
       $('.ui .dropdown').dropdown();
@@ -59,33 +58,43 @@ define(['GM'],function (GM){
         }
   })();
 
-  // 获取后台爬取的github数据信息
-  // 首页处理数据展示
-  (function (){
-    var Ajax = GM.ajax(); // 实例化一个Ajax对象
-
-    if(sessionStorage.getItem("github")){ // 设置优先从缓存读取
-      console.log(sessionStorage.getItem("github"));
-    }else{
-      Ajax.init({
-        url: "/posts/ajax",
-        datatype: "json",
-        method: "get",
-        success: function (data){
-          sessionStorage.setItem("github",data);
-        }
-      });
-    }
-  })();
-
     // 收藏文章
     // 绑定点击事件
     (function (){
+        var Ajax = GM.ajax();
+
         for(var i = 0;i < collect.length ; i++){
           GM.addEventHandler(collect[i],"click",function (event){
-               var img = this.childNodes[0];
+                // 组织默认事件和冒泡
+                window.event ? window.event.cancelBubble = true : event.stopPropagation();
 
-               img.childNodes[0].src = '/images/collect_success.svg'; // 收藏成功 切换标识
+                this.disabled = true;
+                var data = {
+                  "author": this.getAttribute('author'),
+                  "post": this.getAttribute('post')
+                  },
+                  frontCollect;
+                console.log(data);
+                frontCollect = this.childNodes[0];
+                // 收藏文章的ajax请求
+                Ajax.init({
+                  url: "/posts/collect",
+                  datatype: "JSON",
+                  data: data,
+                  method: "get",
+                  success: function (result){
+                    this.disabled = false;
+                    result = JSON.parse(result);
+
+                    var flag = result.flag;
+                    console.log(flag);
+                    if(flag){
+                      frontCollect.src = '/images/collect_success.svg';  // 收藏成功 切换标识
+                    }else{
+                      frontCollect.src = '/images/favourite.svg';
+                    }
+                  }
+                });
           });
         }
     })();

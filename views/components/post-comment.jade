@@ -21,8 +21,22 @@ div.article-item
               img(src='/images/good.svg')
               span 0
             span.collect
-              a(href='/posts/collect?author=#{user._id}&post=#{post._id}')
-                img(src='/images/favourite.svg')
+              a(class='addcollect',author='#{user._id}',post='#{post._id}')
+                if collections
+                  - var flag = false
+                  - var i = 0
+                  - for(;i<collections.length;i++){
+                     if post._id == collections[i]
+                      - console.log('1111',flag,collections.length)
+                      - flag = true
+                      - break
+                  - }
+                  if flag
+                    img(src='/images/collect_success.svg')
+                  else
+                    img(src='/images/favourite.svg')
+                else
+                  img(src='/images/favourite.svg')
 
         if user&&post.author._id&&user._id.toString()===post.author._id.toString()
           div.writer-edit

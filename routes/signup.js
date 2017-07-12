@@ -21,7 +21,6 @@ router.post('/', checkNotLogin, function(req, res, next) {
   var avatar = req.files.avatar.path.split(path.sep).pop();
   var password = req.fields.password;
   var repassword = req.fields.repassword;
-  var collections = [];
 
   // 校验参数
  try {
@@ -59,8 +58,7 @@ router.post('/', checkNotLogin, function(req, res, next) {
     password: password,
     gender: gender,
     bio: bio,
-    avatar: avatar,
-    collections: collections  // 用户收藏文章集
+    avatar: avatar
   };
 
   // 写入数据库
@@ -71,8 +69,16 @@ router.post('/', checkNotLogin, function(req, res, next) {
       // 将用户信息存入 session
       delete user.password;
       req.session.user = user;
-      // 写入 flash
-      req.flash('success', '注册成功');
+
+      var collectItem = {
+        author: req.session.user._id,
+        collections: []
+      };
+
+      UserModel.createCollect(collectItem).then(function (){
+        // 写入 flash
+        req.flash('success', '注册成功');
+      });
       // 跳转到首页
       res.redirect('/posts');
     })
@@ -82,7 +88,7 @@ router.post('/', checkNotLogin, function(req, res, next) {
       // 用户名被占用则跳回注册页，而不是错误页
       if (e.message.match('E11000 duplicate key')) {
         req.flash('error', '用户名已被占用');
-        return res.redirect('/signup');
+        res.redirect('/signup');
       }
       next(e);
     });

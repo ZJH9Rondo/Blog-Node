@@ -15,7 +15,7 @@ div.nav
         i.icon.bars
         div.menu
           if user
-            a.item(href='/posts?author=#{user._id}') 个人主页
+            a.item(href='/posts/user?author=#{user._id}') 个人主页
             div.divider
             a.item(href='/posts/create') 发表文章
             a.item(href='/posts/collection?author=#{user._id}') 我的收藏集

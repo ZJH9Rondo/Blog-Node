@@ -2,7 +2,7 @@ div.article-living
   div.writer-front
     img(src='/images/#{post.author.avatar}')
   p.writer
-    a(href='/posts?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}')  #{post.author.name}
+    a(href='/posts?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}') #{post.author.name}
   div.living-content
       p.article-title
         a(href='/posts/#{post._id}') #{post.title}

@@ -1,6 +1,7 @@
 // 处理用户注册路由
 var User = require('../lib/mongo').User;
 var Post = require('../lib/mongo').Post;
+var Collects = require('../lib/mongo').Collects;
 
 User.plugin('contentToHtml', {
   afterFind: function (posts) {
@@ -23,6 +24,10 @@ module.exports = {
       return User.create(user).exec();
     },
 
+    createCollect: function createCollect(collectItem){
+      return Collects.create(collectItem).exec();
+    },
+
     // 通过用户名获取用户信息
     getUserByName: function getUserByName(name){
       return User
@@ -34,24 +39,16 @@ module.exports = {
     // 添加收藏
     addCollect: function addCollect(author,post){
         // 更新当前登录用户收藏文章数据
-        return User
-        .update({_id:author},{$push:{collections: post}})
+        return Collects
+        .update({"author": author},{$addToSet: {"collections": post}}) // 避免插入重复地址
         .exec();
     },
 
     // 取消收藏
     adoptCollect: function adoptCollect(author,post){
         // 取消当前已收藏的文章
-        return User
-        .update({_id:author},{$pull:{collections: post}})
-        .exec();
-    },
-
-    // 获取登录用户收藏文章
-    getCollections: function (author){
-
-        return  User
-        .findOne({_id: author},{collections: 1,_id: 0})
+        return Collects
+        .update({"author": author},{$pull: {"collections": post}})  // 移除指定元素
         .exec();
     }
 };
