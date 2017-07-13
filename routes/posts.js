@@ -27,14 +27,14 @@ router.get('/',function (req,res,next){
         PostModel.getCollections(authorCollected).then(function (result){
           var collections = result.collections;
 
-           res.render('posts', {
-            posts: posts,
-            collections: collections
+          return  res.render('posts', {
+              posts: posts,
+              collections: collections
           });
         });
       }else{
-          res.render('posts',{
-            posts: posts
+          return res.render('posts',{
+              posts: posts
           });
       }
   });
@@ -50,7 +50,7 @@ router.get('/user',checkLogin,function (req,res,next){
       PostModel.getCollections(author).then(function (result){
         var collections = result.collections;
 
-         res.render('posts', {
+        return  res.render('posts', {
           posts: posts,
           collections: collections
         });
@@ -76,13 +76,13 @@ router.get('/github',function (req,res){
     function jsonpData(github){
       // 处理数据
       data = params.query.callback + '(' + JSON.stringify(github) +')';
-      res.end(data); // 此处的 res 属于Ajax请求 非 https
+      return res.end(data); // 此处的 res 属于Ajax请求 非 https
   }
 
   // Ajax同源回调函数
     function jsonData(github){
       data = JSON.stringify(github);
-      res.end(data);
+      return res.end(data);
    }
 
    https.get(url,function (res,err){
@@ -144,13 +144,11 @@ router.get('/collection',checkLogin,function (req,res,next){
       var author = req.query.author;
 
       PostModel.getCollections(author).then(function (result){
-
           var articles = result.collections;
-          console.log(articles);
         // 根据返回的用户收藏文章Id
         // 查询对应文章
          PostModel.getCollect(articles).then(function (collections){
-            res.render('collections',{
+            return res.render('collections',{
               collections: collections
             });
          });
@@ -161,11 +159,15 @@ router.get('/collection',checkLogin,function (req,res,next){
 router.get('/collect',checkLogin,function (req,res,next){
       // 根据文章Id 识别当前收藏文章
       var author = req.query.author,
-          post = req.query.post;
+          post = req.query.post,
+          number = req.query.number;
 
+      console.log("新的请求",number);
       PostModel.getCollections(author).then(function (result){
-      var articles = result.collections,
-          flag = false;
+        var articles = result.collections,
+            flag = false,
+            status;
+
         console.log(articles);
         if(articles.length === 0){
             flag = true;
@@ -173,30 +175,33 @@ router.get('/collect',checkLogin,function (req,res,next){
         if(flag){
           // 收藏文章
           Users.addCollect(author,post).then(function (result){
-            var status = {
+            status = {
               flag: flag
             };
 
             status = JSON.stringify(status);
-            res.end(status);
+            console.log(status,'请求完成');
+            return res.end(status);
           });
         }else{
           // 取消收藏
           Users.adoptCollect(author,post).then(function (result){
-            var status = {
+            status = {
               flag: flag
             };
 
             status = JSON.stringify(status);
-            res.end(status);
+            console.log(status,'请求完成');
+            return res.end(status);
           });
         }
-      });
+      })
+      .catch(next);
 });
 
 // GET /posts/create 发表文章页
 router.get('/create', checkLogin, function(req, res, next) {
-    res.render('create');
+    return res.render('create');
 });
 
 // POST /posts 发表一篇文章
@@ -216,7 +221,7 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
     }
   } catch (e) {
     req.flash('error', e.message);
-    res.redirect('back');
+    return res.redirect('back');
   }
 
   // blog _post实体 当前
@@ -233,7 +238,7 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
       post = result.ops[0];
       req.flash('success', '发表成功');
       // 发表成功后跳转到该文章页
-      res.redirect(`/posts/${post._id}`); // 必须使用 ``，否则读取不成功
+      return res.redirect(`/posts/${post._id}`); // 必须使用 ``，否则读取不成功
     });
 });
 
@@ -253,7 +258,7 @@ router.get('/:postId', function(req, res, next) {
             throw new Error('该文章不存在');
           }
 
-           res.render('post', {
+          return  res.render('post', {
             post: post,
             comments: comments
           });
@@ -275,7 +280,7 @@ router.get('/:postId/edit', checkLogin, function(req, res, next) {
       if (author.toString() !== post.author._id.toString()) {
         throw new Error('权限不足');
       }
-      res.render('edit', {
+      return res.render('edit', {
         post: post
       });
     })
@@ -293,7 +298,7 @@ router.post('/:postId/edit', checkLogin, function(req, res, next) {
   .then(function () {
     req.flash('success', '编辑文章成功');
     // 编辑成功后跳转到上一页
-    res.redirect(`/posts/${postId}`); // 注意字符 ``
+    return res.redirect(`/posts/${postId}`); // 注意字符 ``
   })
     .catch(next);
 });
@@ -307,7 +312,7 @@ router.get('/:postId/remove', checkLogin, function(req, res, next) {
   .then(function () {
     req.flash('success', '删除文章成功');
     // 删除成功后跳转到主页
-    res.redirect('/posts');
+    return res.redirect('/posts');
     })
     .catch(next);
 });
@@ -327,7 +332,7 @@ router.post('/:postId/comment', checkLogin, function(req, res, next) {
     .then(function () {
       req.flash('success', '留言成功');
       // 留言成功后跳转到上一页
-      res.redirect('back');
+      return res.redirect('back');
     })
     .catch(next);
 });
@@ -341,7 +346,7 @@ router.get('/:postId/comment/:commentId/remove', checkLogin, function(req, res, 
   .then(function () {
     req.flash('success', '删除留言成功');
     // 删除成功后跳转到上一页
-    res.redirect('back');
+    return res.redirect('back');
   })
   .catch(next);
 });

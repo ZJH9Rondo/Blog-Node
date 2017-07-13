@@ -149,6 +149,7 @@ define(function(){
                                 this.settings.url = this.addURLParam(this.settings.url,item,this.settings.data[item]);
                             }
 
+                            this.settings.url+= (this.settings.url.indexOf('?'))=== -1 ? '?number=' + Math.random() : '&number=' + Math.random() ;
                             xhr.onreadystatechange = complete;
                             xhr.open(this.settings.method,this.settings.url,this.settings.async);
                             xhr.send(null);
