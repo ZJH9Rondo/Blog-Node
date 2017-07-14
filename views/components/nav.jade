@@ -2,7 +2,7 @@ div.nav
   ul#nav_Menu
     div#nav_SlideBar
     li.nav_Menuitem
-      a(href='/') 首页
+      a(href='/posts') 首页
     li.nav_Menuitem
       a(href='/') 首页
     li.nav_Menuitem
@@ -15,10 +15,10 @@ div.nav
         i.icon.bars
         div.menu
           if user
-            a.item(href='/posts/user?author=#{user._id}') 个人主页
+            a.item(href='/user?author=#{user._id}') 个人主页
             div.divider
-            a.item(href='/posts/create') 发表文章
-            a.item(href='/posts/collection?author=#{user._id}') 我的收藏集
+            a.item(href='/create') 发表文章
+            a.item(href='/collection?author=#{user._id}') 我的收藏集
             a.item(href='/signout') 登出
           else
             a.item(href='/signin') 登录

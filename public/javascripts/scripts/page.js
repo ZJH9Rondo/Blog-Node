@@ -74,11 +74,12 @@ define(['GM'],function (GM){
                   "post": this.getAttribute('post')
                   },
                   frontCollect;
+
                 console.log(data);
                 frontCollect = this.childNodes[0];
                 // 收藏文章的ajax请求
                 Ajax.init({
-                  url: "/posts/collect",
+                  url: "/collect",
                   datatype: "JSON",
                   data: data,
                   method: "get",
