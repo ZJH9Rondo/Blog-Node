@@ -5,5 +5,12 @@ module.exports = function(app){
        res.render('index');
     });
 
+    app.use('/',require('./signup'));
+
+    app.use('/',require('./signin'));
+
+    app.use('/',require('./signout'));
+
+    app.use('/',require('./posts'));
 
 };
