@@ -17,8 +17,8 @@ div.nav
           if user
             a.item(href='/user?author=#{user._id}') 个人主页
             div.divider
-            a.item(href='/create') 发表文章
-            a.item(href='/collection?author=#{user._id}') 我的收藏集
+            a.item(href='/user/newArticle') 写文章
+            a.item(href='/user/collections?author=#{user._id}') 我的收藏集
             a.item(href='/signout') 登出
           else
             a.item(href='/signin') 登录

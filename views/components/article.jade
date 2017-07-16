@@ -5,7 +5,7 @@ div.article-living
     a(href='/posts?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}') #{post.author.name}
   div.living-content
       p.article-title
-        a(href='/posts/#{post._id}') #{post.title}
+        a(href='/article?postId=#{post._id}') #{post.title}
       pre!=post.content
       div.article-about
         span.tag #{post.created_at}
@@ -21,11 +21,25 @@ div.article-living
               img(src='/images/good.svg')
               span 0
             span.collect
-              img(src='/images/favourite.svg')
+              a(class='addcollect',author='#{user._id}',post='#{post._id}')
+                if collections
+                  - var flag = false
+                  - var i = 0
+                  - for(;i<collections.length;i++){
+                     if post._id == collections[i]
+                      - flag = true
+                      - break
+                  - }
+                  if flag
+                    img(src='/images/collect_success.svg')
+                  else
+                    img(src='/images/favourite.svg')
+                else
+                  img(src='/images/favourite.svg')
 
           if user&&post.author._id&&user._id.toString()===post.author._id.toString()
             div.writer-edit
               button.item
-                a(href='/posts/#{post._id}/edit') 编辑
+                a(href='/article/edit?postId=#{post._id}') 编辑
               button.item
-                a(href='/posts/#{post._id}/remove') 删除
+                a(href='/article/remove?postId=#{post._id}') 删除

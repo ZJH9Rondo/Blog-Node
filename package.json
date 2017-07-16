@@ -1,6 +1,6 @@
 {
-  "name": "test",
-  "version": "0.0.1",
+  "name": "blog",
+  "version": "1.0.0",
   "private": true,
   "main": "app.js",
   "scripts": {

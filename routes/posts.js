@@ -13,7 +13,7 @@ var url = 'https://github.com/ZJH9Rondo';
 // 权限检查
 var checkLogin = require('../middlewares/check').checkLogin;
 
-// 首页路由
+// 文章页
 router.get('/posts',function (req,res,next){
   // author 区分用户页和主页
   var author = req.query.author;
@@ -57,7 +57,6 @@ router.get('/user',function (req,res,next){
       });
   });
 });
-
 
 // 响应Ajax请求 返回github 爬取数据
 // 回调函数响应，防止返回空
@@ -141,7 +140,7 @@ router.get('/github',function (req,res){
 });
 
 // 跳转到用户文章收藏页
-router.get('/collection',function (req,res,next){
+router.get('/user/collections',function (req,res,next){
       // 识别当前登录用户
       var author = req.query.author;
 
@@ -162,43 +161,43 @@ router.get('/collect',function (req,res,next){
       // 根据文章Id 识别当前收藏文章
       var author = req.query.author,
           post = req.query.post;
+          
+          PostModel.getCollections(author,post).then(function (result){
 
-      PostModel.getCollections(author).then(function (result){
-        var articles = result.collections,
-            flag = false,
-            status;
+              return new Promise(function (resolve,reject){
+                  var collections = result.collections,
+                      flag = false;
 
-        if(articles.length === 0){
-            flag = true;
-        }
-        if(flag){
-          // 收藏文章
-          Users.addCollect(author,post).then(function (result){
-            status = {
-              flag: flag
-            };
+                  for(var i in collections){
+                    if(post === collections[i]){
+                      flag = true;
+                      break;
+                    }
+                  }
+                  resolve(flag);
+                });
+          }).then(function (result){
+            if(result){
+              Users.adoptCollect(author,post);
 
-            status = JSON.stringify(status);
-            res.end(status);
-            return;
+              return new Promise(function (resolve,reject){
+                 resolve(result);
+              });
+            }else{
+              Users.addCollect(author,post);
+
+              return new Promise(function (resolve,reject){
+                 resolve(result);
+              });
+            }
+          }).then(function (result){
+             res.status(200).json(result);
+             return res.end();
           });
-        }else{
-          // 取消收藏
-          Users.adoptCollect(author,post).then(function (result){
-            status = {
-              flag: flag
-            };
-
-            status = JSON.stringify(status);
-            res.end(status);
-            return;
-          });
-        }
-      });
 });
 
 // GET /posts/create 发表文章页
-router.get('/create', checkLogin, function(req, res, next) {
+router.get('/user/newArticle', checkLogin, function(req, res, next) {
     res.render('create');
 });
 
@@ -236,21 +235,24 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
       post = result.ops[0];
       req.flash('success', '发表成功');
       // 发表成功后跳转到该文章页
-      return res.redirect(`/posts/${post._id}`); // 必须使用 ``，否则读取不成功
+      return res.redirect(`/article/${post._id}`); // 必须使用 ``，否则读取不成功
     });
 });
 
 // GET /posts/:postId 单独一篇的文章页
-router.get('/:postId', function(req, res, next) {
-    var postId = req.params.postId;
+router.get('/article', function(req, res, next) {
+    var postId = req.query.postId,
+        author = req.session.user._id;
 
     Promise.all([
         PostModel.getPostById(postId),// 获取文章信息
         CommentModel.getComments(postId),// 获取该文章所有留言
+        PostModel.getCollections(author),
         PostModel.incPv(postId)// pv 加 1
       ]).then(function (result) {
-          var post = result[0];
-          var comments = result[1]; // 打印观察
+          var post = result[0],
+              comments = result[1], // 打印观察
+              collections = result[2].collections;
 
           if (!post) {
             throw new Error('该文章不存在');
@@ -258,16 +260,17 @@ router.get('/:postId', function(req, res, next) {
 
           res.render('post', {
             post: post,
-            comments: comments
+            comments: comments,
+            collections: collections
           });
         })
         .catch(next);
     });
 
-// GET /posts/:postId/edit 更新文章页
-router.get('/:postId/edit', checkLogin, function(req, res, next) {
-  var postId = req.params.postId;
-  var author = req.session.user._id;
+// GET /posts/:postId/edit 编辑文章页
+router.get('/article/edit', checkLogin, function(req, res, next) {
+  var postId = req.query.postId,
+      author = req.session.user._id;
 
   // 方法已定义
   PostModel.getRawPostById(postId)
@@ -286,8 +289,8 @@ router.get('/:postId/edit', checkLogin, function(req, res, next) {
 });
 
 // POST /posts/:postId/edit 更新一篇文章
-router.post('/:postId/edit', checkLogin, function(req, res, next) {
-  var postId = req.params.postId;
+router.post('/article/edit/finish', checkLogin, function(req, res, next) {
+  var postId = req.query.postId;
   var author = req.session.user._id;
   var title = req.fields.title;
   var content = req.fields.content;
@@ -296,14 +299,14 @@ router.post('/:postId/edit', checkLogin, function(req, res, next) {
   .then(function () {
     req.flash('success', '编辑文章成功');
     // 编辑成功后跳转到上一页
-    return res.redirect(`/posts/${postId}`); // 注意字符 ``
+    return res.redirect(`/article?postId=${postId}`); // 注意字符 ``
   })
     .catch(next);
 });
 
 // GET /posts/:postId/remove 删除一篇文章
-router.get('/:postId/remove', checkLogin, function(req, res, next) {
-  var postId = req.params.postId;
+router.get('/article/remove', checkLogin, function(req, res, next) {
+  var postId = req.query.postId;
   var author = req.session.user._id;
 
   PostModel.delPostById(postId, author)
@@ -316,9 +319,9 @@ router.get('/:postId/remove', checkLogin, function(req, res, next) {
 });
 
 // POST /posts/:postId/comment 创建一条留言
-router.post('/:postId/comment', checkLogin, function(req, res, next) {
+router.post('/article/addComment', checkLogin, function(req, res, next) {
   var author = req.session.user._id;
-  var postId = req.params.postId;
+  var postId = req.query.postId;
   var content = req.fields.content;
   var comment = {
       author: author,
@@ -336,8 +339,8 @@ router.post('/:postId/comment', checkLogin, function(req, res, next) {
 });
 
 // GET /posts/:postId/comment/:commentId/remove 删除一条留言
-router.get('/:postId/comment/:commentId/remove', checkLogin, function(req, res, next) {
-  var commentId = req.params.commentId;
+router.get('/article/rmComment', checkLogin, function(req, res, next) {
+  var commentId = req.query.commentId;
   var author = req.session.user._id;
 
   CommentModel.delCommentById(commentId, author)

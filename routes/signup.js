@@ -46,7 +46,8 @@ router.post('/signup', checkNotLogin, function(req, res, next) {
    // 注册失败，异步删除上传的头像
    fs.unlink(req.files.avatar.path);
    req.flash('error', e.message);
-   return res.redirect('/signup');
+   res.redirect('/signup');
+   return;
  }
 
   // scrypt hash 密码加密
@@ -80,7 +81,8 @@ router.post('/signup', checkNotLogin, function(req, res, next) {
         req.flash('success', '注册成功');
       });
       // 跳转到首页
-      return res.redirect('/posts');
+      res.redirect('/posts');
+      return;
     })
     .catch(function (e) {
       // 注册失败，异步删除上传的头像
@@ -88,7 +90,8 @@ router.post('/signup', checkNotLogin, function(req, res, next) {
       // 用户名被占用则跳回注册页，而不是错误页
       if (e.message.match('E11000 duplicate key')) {
         req.flash('error', '用户名已被占用');
-        return res.redirect('/signup');
+        res.redirect('/signup');
+        return;
       }
       next(e);
     });

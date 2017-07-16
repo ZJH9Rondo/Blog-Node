@@ -6,10 +6,10 @@ block content
       div.editor-front
         img(src='/images/#{user.avatar}')
       p.editor
-        a(href='/posts?author=#{user._id}',data-title='',data-content='#{user.bio}')  #{user.name}
+        a(href='/user?author=#{user._id}',data-title='',data-content='#{user.bio}')  #{user.name}
 
       div.edit-form
-        form.ui.form.segment(method='post',action='/posts/#{post._id}/edit',enctype='multipart/form-data')
+        form.ui.form.segment(method='post',action='/article/edit/finish?postId=#{post._id}',enctype='multipart/form-data')
           div.field.required
             lable 标题
             input(type='text',name='title',value='#{post.title}')

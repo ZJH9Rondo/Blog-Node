@@ -68,7 +68,6 @@ define(['GM'],function (GM){
                 // 组织默认事件和冒泡
                 window.event ? window.event.cancelBubble = true : event.stopPropagation();
 
-                this.disabled = true;
                 var data = {
                   "author": this.getAttribute('author'),
                   "post": this.getAttribute('post')
@@ -84,15 +83,14 @@ define(['GM'],function (GM){
                   data: data,
                   method: "get",
                   success: function (result){
-                    this.disabled = false;
                     result = JSON.parse(result);
 
-                    var flag = result.flag;
+                    var flag = result;
                     console.log(flag);
                     if(flag){
-                      frontCollect.src = '/images/collect_success.svg';  // 收藏成功 切换标识
+                      frontCollect.src = '/images/favourite.svg';  // 收藏成功 切换标识
                     }else{
-                      frontCollect.src = '/images/favourite.svg';
+                      frontCollect.src = '/images/collect_success.svg';
                     }
                   }
                 });

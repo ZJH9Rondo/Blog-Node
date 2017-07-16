@@ -12,7 +12,8 @@ router.get('/signout', checkLogin, function(req, res, next) {
   req.flash('success','登出成功！');
 
   // 跳转到主页
-  return res.redirect('/posts');
+  res.redirect('/posts');
+  return;
 });
 
 module.exports = router;

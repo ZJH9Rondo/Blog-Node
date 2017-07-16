@@ -29,29 +29,23 @@ app.use(cookieParser());
 // 默认模板目录
 app.use(express.static(path.join(__dirname, 'public')));
 
-// session
-app.use(session({
-    name:config.session.key, // 设置cookie中保存session id的字段名称
-    secret:config.session.secret, // 通过设置secret来计算hash值并放在cookie中，使产生的signedCookie防篡改
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-        maxAge:config.session.maxAge // 过期时间，过期后cookie中的session id自动删除
-    },
-    store:new MongoStore({ // 将session存放到mongodb
-        db:config.db,
-        url:config.mongodb // mongodb地址
-    })
-}));
 
 // 显示通知中间件
 app.use(flash());
 
-// 处理表单及文件上传的中间件
-// <-- 不熟悉 -->
-app.use(require('express-formidable')({
-  uploadDir: path.join(__dirname, 'public/images'),// 上传文件目录
-  keepExtensions: true  // 保留后缀
+// session
+app.use(session({
+  name:config.session.key, // 设置cookie中保存session id的字段名称
+  secret:config.session.secret, // 通过设置secret来计算hash值并放在cookie中，使产生的signedCookie防篡改
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge:config.session.maxAge // 过期时间，过期后cookie中的session id自动删除
+  },
+  store:new MongoStore({ // 将session存放到mongodb
+    db:config.db,
+    url:config.mongodb // mongodb地址
+  })
 }));
 
 // 设置模板全局常量
@@ -68,19 +62,14 @@ app.use(function (req, res, next) {
   next();
 });
 
-// 设置模板全局常量
-app.locals.blog = {
-  title: pkg.name,
-  description: pkg.description
-};
+// 处理表单及文件上传的中间件
+app.use(require('express-formidable')({
+  uploadDir: path.join(__dirname, 'public/img'),// 上传文件目录
+  keepExtensions: true// 保留后缀
+}));
 
-// 添加模板必需的三个变量
-app.use(function (req, res, next) {
-  res.locals.user = req.session.user;
-  res.locals.success = req.flash('success').toString();
-  res.locals.error = req.flash('error').toString();
-  next();
-});
+// 路由
+routes(app);
 
 // 日志功能
 // 正常请求的日志
@@ -95,9 +84,6 @@ app.use(expressWinston.logger({
     })
   ]
 }));
-
-// 路由
-routes(app);
 
 // 错误请求的日志
 app.use(expressWinston.errorLogger({

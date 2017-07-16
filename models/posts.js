@@ -84,9 +84,10 @@ module.exports = {
 
   // 获取登录用户收藏文章
   getCollections: function getCollections(author){
-      return  Collects
+      var collections = Collects
       .findOne({author: author},{collections: 1,_id: 0})
       .exec();
+      return collections; 
   },
 
   // 通过文章 id 给 pv 加 1

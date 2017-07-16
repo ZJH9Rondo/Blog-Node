@@ -27,7 +27,8 @@ router.post('/signin', checkNotLogin, function(req, res, next) {
     // 检查密码是否匹配
     if (pwdFlag !== user.password) {
       req.flash('error', '用户名或密码错误');
-      return res.redirect('back');
+      res.redirect('back');
+      return;
     }
     req.flash('success', '登录成功');
     // 用户信息写入 session
