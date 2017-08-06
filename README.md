@@ -24,21 +24,83 @@
   * 基于 stylus 进行css的预编译
   * gulp构建自动化
   * requirejs模块化加载
+  * 七牛图床存取文章图片资源
 
 ### 改动
   * 通过在github看了一些关于在Express中通过scrypt对注册密码进行hash加密的使用,对原本项目中的加密方法进行了更改
-  * 开源项目的模板是模板引擎是基于ejs，但是在此项目是基于jade模板引擎，对于其中的模板变量需要更改为jade的语法，详见jade模板指南
-  * 加入article单独文章页面，基于stylus预编译对views的css进行了重构，其中有一个stylus的纯方法文件，作为依赖@import到各个所需的styl预编译文件中
-  * 配置gulp,在gulp中配置了对.styl后缀的预编译文件进行预编译并将导出的css文件压缩
-  * 修改nav的跳转路径,防止在非首页页面时,受路由影响出现跳转错误
-  * 博客基于AMD规范，模块化加载js文件,详见问题归纳4
-  * 封装Ajax
-  * sessionStorage 和 localStorage
-  * 爬虫爬取github主页信息处理数据整合后展示到博客首页
-  * 添加用户收藏文章功能，添加独立的用户文章收藏集页面，读取当前登录用户收藏的文章。
-    > 收藏功能通过Ajax异步与后台交互，通过查询当前数据库中该用户是否收藏过该文章，从而判定当前行为应是添加收藏还是取消收藏。
 
-    > 收藏功能BUG: 当前判定添加取消收藏功能中对数据库查询存在无法正常获取最新数据阶段，一段时间后会正常返回，很快会修复。
+  * 开源项目的模板是模板引擎是基于ejs，但是在此项目是基于jade模板引擎，对于其中的模板变量需要更改为jade的语法，详见jade模板指南
+
+  * 加入article单独文章页面，基于stylus预编译对views的css进行了重构，其中有一个stylus的纯方法文件，作为依赖@import到各个所需的styl预编译文件中
+
+  * 配置gulp,在gulp中配置了对.styl后缀的预编译文件进行预编译并将导出的css文件压缩
+
+  * 修改nav的跳转路径,防止在非首页页面时,受路由影响出现跳转错误
+
+  * 博客基于AMD规范，模块化加载js文件,详见问题归纳4
+
+  * 封装一个简易的Ajax，能满足基本使用，如果实际生产环境，还是建议使用jquery的ajax
+
+  * 爬虫爬取github主页信息处理数据整合后展示到博客首页，截取数据存入本地sessionStorage
+
+  * 添加用户收藏文章功能，添加独立的用户文章收藏集页面，读取当前登录用户收藏的文章。
+    > 之前由于是表单上传使用的开源中间件，但此中间件存在Bug会直接导致请求响应出现重写响应头的Bug，最后根据此库还未合并的Pr说明
+
+    > 更改了本地的lib文件，Bug修复，此功能正常使用，但因为数据量小，也还没优化，还在学习改进中。
+
+  * 文章创建/编辑页面支持复制粘贴插入图片（当前复制粘贴功能只支持chrome，很快会适配其余浏览器），读取图片，以base64格式上传至七牛云，调取上传成功后七牛默认的返回key值转换为加载链接，并以markdown语法格式插入编辑区域，保存文章后加载直接读取七牛图床数据，之后上线会引入CDN。
+  > 后端获取Uptoken配置文件
+
+   ```js
+      // /config/qiniu_user.js
+       module.exports = {
+        'ACCESS_Key': '你当前七牛的accessKey',
+        'SECRET_Key': '你当前七牛的secertKey',
+        'OPTIONS': {
+          scope: '你七牛目的空间的Bucket'
+        }
+      };
+   ```
+  > 前端ajax参数设置
+  ```js
+      // 客户端直传函数
+      function upload_base64(base64_str,upload_url,token){
+        var pic = base64_str,
+            url = upload_url,
+            xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function (){
+          if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200){
+              var img = JSON.parse(xhr.responseText),
+                  Imgsrc = '你七牛存储空间的自定义域名或者当前所绑定的域名' + img.key;
+
+              markdown_IMG(Imgsrc);
+          }
+        };
+        xhr.open("POST",url,true);
+        xhr.setRequestHeader("Content-Type", "application/octet-stream");
+        xhr.setRequestHeader("Authorization",'UpToken' + ' ' + token);
+        xhr.send(pic);
+     }
+
+     // 获取token
+     Ajax.init({
+       url: '/getToken',
+       method: 'get',
+       datatype: 'json',
+       success: function (result){
+
+       base64_str = base64_str.replace(/^data:image\/\w+;base64,/, '');
+
+       // 根据七牛开发文档描述，当前目的存储空间位置不同(华南、华北、北美)，'*****'对应值不同
+       // 根据需要自行更改
+       upload_url = 'http://*******.qiniu.com/putb64/' + imageFile.size;
+       result = JSON.parse(result);
+       upToken = result.token;
+       // 上传文件
+       upload_base64(base64_str,upload_url,upToken);
+     }
+  ```
 
 ### 问题归纳:
   * 1.在从数据库读取博文Content时，默认jade引擎读取文本为html字符串？

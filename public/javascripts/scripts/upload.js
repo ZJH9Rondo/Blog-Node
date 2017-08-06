@@ -72,9 +72,9 @@ define(['GM'],function (GM){
               base64_str = base64_str.replace(/^data:image\/\w+;base64,/, '');
               upload_url = 'http://upload-z2.qiniu.com/putb64/' + imageFile.size;
               result = JSON.parse(result);
-              UpToken = result.token;
+              upToken = result.token;
               // 上传文件
-              upload_base64(base64_str,upload_url,UpToken);
+              upload_base64(base64_str,upload_url,upToken);
             }
           });
         };
