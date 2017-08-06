@@ -74,7 +74,6 @@ define(['GM'],function (GM){
                   },
                   frontCollect;
 
-                console.log(data);
                 frontCollect = this.childNodes[0];
                 // 收藏文章的ajax请求
                 Ajax.init({
@@ -86,7 +85,6 @@ define(['GM'],function (GM){
                     result = JSON.parse(result);
 
                     var flag = result;
-                    console.log(flag);
                     if(flag){
                       frontCollect.src = '/images/favourite.svg';  // 收藏成功 切换标识
                     }else{

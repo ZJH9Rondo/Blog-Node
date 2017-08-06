@@ -161,7 +161,7 @@ router.get('/collect',function (req,res,next){
       // 根据文章Id 识别当前收藏文章
       var author = req.query.author,
           post = req.query.post;
-          
+
           PostModel.getCollections(author,post).then(function (result){
 
               return new Promise(function (resolve,reject){
@@ -204,7 +204,7 @@ router.get('/user/newArticle', checkLogin, function(req, res, next) {
 // POST /posts 发表一篇文章
 router.post('/create/submit', checkLogin, function(req, res, next) {
     // 基本信息
-    var author = req.session.user._id;
+    var author = req.query.author;
     var title = req.fields.title;
     var content = req.fields.content;
 
@@ -235,7 +235,7 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
       post = result.ops[0];
       req.flash('success', '发表成功');
       // 发表成功后跳转到该文章页
-      return res.redirect(`/article/${post._id}`); // 必须使用 ``，否则读取不成功
+      return res.redirect(`/article?postId=${post._id}`); // 必须使用 ``，否则读取不成功
     });
 });
 

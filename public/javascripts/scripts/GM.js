@@ -154,11 +154,12 @@ define(function(){
                             xhr.open(this.settings.method,this.settings.url,this.settings.async);
                             xhr.send(null);
                         }
+
                         if(this.settings.method == 'post' || this.settings.method == 'POST'){
                           // POST请求
                             xhr.onreadystatechange = complete;
                             xhr.open(this.settings.type,this.settings.url,this.settings.async);
-                            xhr.setRequestHeader = ("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
+                            xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
                             xhr.send(this.settings.data);
                         }
                     }
@@ -207,7 +208,9 @@ define(function(){
                             scriptJsonp.src = this.settings.url;
                         }
                     }
-                },
+                  },
+
+
 
                 // 处理URL
                 addURLParam: function (url,name,value){
