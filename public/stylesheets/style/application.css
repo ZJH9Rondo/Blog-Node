@@ -45,7 +45,7 @@ li {
   min-height: 100%;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 0 width 100%;
   right: 0;
   bottom: 0;
   background-image: url("../images/user_bg-01.jpg");
@@ -89,4 +89,26 @@ li {
 .user_footer>p {
   width: 100%;
   height: 66.66666666666667px;
+}
+/**   Content tips    **/
+#tips {
+  display: none;
+  height: 40px;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+}
+#tips>p {
+  width: 80%;
+  height: 20px;
+  text-align: center;
+  font-size: 14px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }

@@ -39,7 +39,5 @@ div.article-living
 
           if user&&post.author._id&&user._id.toString()===post.author._id.toString()
             div.writer-edit
-              button.item
-                a(href='/article/edit?postId=#{post._id}') 编辑
-              button.item
-                a(href='/article/remove?postId=#{post._id}') 删除
+              a.item(href='/article/edit?postId=#{post._id}') 编辑
+              a.item(href='/article/remove?postId=#{post._id}') 删除
