@@ -1,9 +1,13 @@
 // signin 登录页
 var express = require('express');
 var router = express.Router();
+var request = require('request');
+var https = require('https');
 var scrypt = require('scrypt');
 var key = new Buffer('Rondo Blog'); // 用于 scrypt hash加密
 var UserModel = require('../models/users');
+var oAuth_github = require('../config/oAuth_github');
+
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 
 // GET /signin 登录页
@@ -38,6 +42,54 @@ router.post('/signin', checkNotLogin, function(req, res, next) {
     return res.redirect('/posts');
   })
   .catch(next);
+});
+
+// github 第三方登录验证
+router.get('/github',function (req,res,next){
+  res.json(oAuth_github.client_id);
+});
+
+// check code and return access_token
+router.get('/checkoAuth',function (req,res,next){
+    var code = req.query.code;
+    var headers = req.headers;
+    var options = {
+      headers: {"Content-Type": 'application/json'},
+      url: 'https://github.com/login/oauth/access_token',
+      method: 'POST',
+      json: true,
+      body:{
+        "client_id": oAuth_github.client_id,
+        "client_secret": oAuth_github.client_secret,
+        "code": code,
+        "state": "ZJH9RondoBlog"
+      }
+    };
+
+    request(options,function (err,response,data){
+        if(err){
+          throw err;
+        }
+
+        if(response.statusCode === 200){
+          var options = {
+            url: 'https://api.github.com/user?access_token='+ data.access_token,
+            headers: {
+              'User-Agent': 'Rondo_blog'
+            }
+          };
+          request.get(options,function (err,response,data){
+            if(err){
+              throw err;
+            }
+
+            if(response.statusCode === 200){
+
+              res.redirect('/');
+            }
+          });
+        }
+    });
 });
 
 module.exports = router;

@@ -29,7 +29,6 @@ app.use(cookieParser());
 // 默认模板目录
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 // 显示通知中间件
 app.use(flash());
 
