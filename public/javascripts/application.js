@@ -10,18 +10,20 @@ requirejs(['GM','page','upload'],function(GM,page,upload){
     var Ajax = GM.ajax(); // 实例化一个Ajax对象
     var github_signin = document.getElementById('github_sign');
 
-    github_signin.addEventListener('click',function (){
-      Ajax.init({
-        url: '/github',
-        method: 'get',
-        datatype: 'json',
-        success: function (result){
-          result = JSON.parse(result);
-          var url = 'https://github.com/login/oauth/authorize?client_id=' + result;
+    if(github_signin){
+      github_signin.addEventListener('click',function (){
+        Ajax.init({
+          url: '/github',
+          method: 'get',
+          datatype: 'json',
+          success: function (result){
+            result = JSON.parse(result);
+            var url = 'https://github.com/login/oauth/authorize?client_id=' + result;
 
-          window.location = url;
-        }
-      });
-    },false);
+            window.location = url;
+          }
+        });
+      },false);
+    }
   })();
 });

@@ -159,6 +159,7 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
 
 // GET /posts/:postId 单独一篇的文章页
 router.get('/article', function(req, res, next) {
+    console.log(req.session.user,'11111111111');
     var postId = req.query.postId,
         author = req.session.user._id;
 

@@ -3,10 +3,13 @@ extends index
 block content
   div.content
     div#tips
-      p 
+      p
     div.article-edit
       div.editor-front
-        img(src='/images/#{user.avatar}')
+        - if (post.author.avatar.substr(0,5) === 'https')
+          img(src='#{post.author.avatar}')
+        -else
+          img(src='/images/#{post.author.avatar}')
       p.editor
         a(href='/user?author=#{user._id}',data-title='',data-content='#{user.bio}')  #{user.name}
 

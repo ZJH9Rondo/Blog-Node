@@ -1,6 +1,9 @@
 div.article-item
   div.writer-front
-    img(src='/images/#{post.author.avatar}')
+    - if (post.author.avatar.substr(0,5) === 'https')
+      img(src='#{post.author.avatar}')
+    -else
+      img(src='/images/#{post.author.avatar}')
   p.writer
     a(href='/user?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}')  #{post.author.name}
   div.article-content

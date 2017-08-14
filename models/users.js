@@ -20,7 +20,7 @@ User.plugin('contentToHtml', {
 
 module.exports = {
     // 注册一个用户
-    create: function create(user){
+    create_new: function create_new(user){
       return User.create(user).exec();
     },
 

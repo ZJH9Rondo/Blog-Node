@@ -46,6 +46,7 @@ router.post('/signin', checkNotLogin, function(req, res, next) {
 
 // github 第三方登录验证
 router.get('/github',function (req,res,next){
+  res.header('Content-Type', 'application/json;charset=utf-8');
   res.json(oAuth_github.client_id);
 });
 
@@ -78,14 +79,42 @@ router.get('/checkoAuth',function (req,res,next){
               'User-Agent': 'Rondo_blog'
             }
           };
+
+          console.log(options.url);
           request.get(options,function (err,response,data){
             if(err){
               throw err;
             }
 
             if(response.statusCode === 200){
+              data = JSON.parse(data);
+              var githuber = {
+                name: data.login,
+                password: data.id.toString(),
+                avatar: data.avatar_url,
+                bio: data.bio
+              };
 
-              res.redirect('/');
+            UserModel.create_new(githuber).then(function (result){
+
+              user = result.ops[0];
+              // 将用户信息存入 session
+              req.session.user = user;
+              var collectItem = {
+                author: req.session.user._id,
+                collections: []
+              };
+
+              UserModel.createCollect(collectItem).then(function (result){
+                // 写入 flash
+                req.flash('success', '注册成功');
+                res.redirect('/posts');
+              });
+            }).catch(function (err){
+              if(err){
+                throw err;
+              }
+            });
             }
           });
         }

@@ -87,7 +87,7 @@ module.exports = {
       var collections = Collects
       .findOne({author: author},{collections: 1,_id: 0})
       .exec();
-      return collections; 
+      return collections;
   },
 
   // 通过文章 id 给 pv 加 1

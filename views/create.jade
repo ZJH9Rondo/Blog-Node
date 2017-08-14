@@ -6,7 +6,10 @@ block content
       p 浏览器不支持
     div.create-article
       div.editor-front
-        img(src='/images/#{user.avatar}')
+        - if (user.avatar.substr(0,5) === 'https')
+          img(src='#{user.avatar}')
+        -else
+          img(src='/images/#{user.avatar}')
       p.editor
         a(href='/posts?author=#{user._id}',data-title='',data-content='#{user.bio}')  #{user.name}
 

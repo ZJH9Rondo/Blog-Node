@@ -16,7 +16,6 @@ router.get('/signup', checkNotLogin, function(req, res, next) {
 // POST /signup 用户注册
 router.post('/signup', checkNotLogin, function(req, res, next) {
   var name = req.fields.name;
-  var gender = req.fields.gender;
   var bio = req.fields.bio;
   var avatar = req.files.avatar.path.split(path.sep).pop();
   var password = req.fields.password;
@@ -26,9 +25,6 @@ router.post('/signup', checkNotLogin, function(req, res, next) {
  try {
    if (!(name.length >= 1 && name.length <= 10)) {
      throw new Error('名字请限制在 1-10 个字符');
-   }
-   if (['m', 'f', 'x'].indexOf(gender) === -1) {
-     throw new Error('性别只能是 m、f 或 x');
    }
    if (!(bio.length >= 1 && bio.length <= 30)) {
      throw new Error('个人简介请限制在 1-30 个字符');
@@ -57,13 +53,12 @@ router.post('/signup', checkNotLogin, function(req, res, next) {
   var user = {
     name: name,
     password: password,
-    gender: gender,
     bio: bio,
     avatar: avatar
   };
 
   // 写入数据库
-  UserModel.create(user)
+  UserModel.create_new(user)
     .then(function (result) {
       // 此 user 是插入 mongodb 后的值，包含 _id
       user = result.ops[0];
