@@ -159,22 +159,28 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
 
 // GET /posts/:postId 单独一篇的文章页
 router.get('/article', function(req, res, next) {
-    console.log(req.session.user,'11111111111');
     var postId = req.query.postId,
-        author = req.session.user._id;
-
-    Promise.all([
-        PostModel.getPostById(postId),// 获取文章信息
+        selects = [PostModel.getPostById(postId),// 获取文章信息
         CommentModel.getComments(postId),// 获取该文章所有留言
-        PostModel.getCollections(author),
-        PostModel.incPv(postId)// pv 加 1
-      ]).then(function (result) {
+        PostModel.incPv(postId)];
+
+    if(req.session.user !== null){
+      selects.slice(2,1,PostModel.getCollections(req.session.user._id));
+    }
+
+    Promise.all(selects).then(function (result) {
           var post = result[0],
-              comments = result[1], // 打印观察
-              collections = result[2].collections;
+              comments = result[1],
+              collections;
 
           if (!post) {
             throw new Error('该文章不存在');
+          }
+
+          if(result[2].collections){
+            collections = result[2].collections;
+          }else{
+            collections = [];
           }
 
           res.render('post', {
