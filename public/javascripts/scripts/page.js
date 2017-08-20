@@ -17,39 +17,38 @@ define(['GM'],function (GM){
 
       function slideBar(i){
               GM.addEventHandler(nav_Item[i],"mouseover",function (event){
-                  var speed = 0;
+                 var speed = 0;
 
-                  start = nav_SlideBar.offsetLeft;
-                  end = this.offsetLeft;
-                  offset = end - start;
+                 start = nav_SlideBar.offsetLeft;
+                 end = this.offsetLeft;
+                 offset = end - start;
 
-                  if(offset == '0'){
-                    return;
-                  }else{
-                    clearInterval(timer);
-                    timer = setInterval(function (){
+                 if(offset == '0'){
+                   return;
+                 }else{
+                   clearInterval(timer);
+                   timer = setInterval(function (){
+                     if((end - nav_SlideBar.offsetLeft) < 0){
+                       speed = Math.floor((end - nav_SlideBar.offsetLeft)/9);
+                     }else{
+                       speed = Math.ceil((end - nav_SlideBar.offsetLeft)/9);
+                     }
 
-                      if((end - nav_SlideBar.offsetLeft+5) < 0){
-                        speed = Math.floor((end - nav_SlideBar.offsetLeft+5)/9);
-                      }else{
-                        speed = Math.ceil((end - nav_SlideBar.offsetLeft+5)/9);
-                      }
+                     nav_SlideBar.style.marginLeft = nav_SlideBar.offsetLeft + speed + 'px';
+                   },20);
+                 }
+             });
 
-                      nav_SlideBar.style.marginLeft = nav_SlideBar.offsetLeft + speed + 'px';
-                    },20);
-                  }
-              });
+             GM.addEventHandler(nav_Item[i],"mouseout",function (){
+                 var speed = 0;
+                 clearInterval(timer);
+                 timer = setInterval(function (){
 
-              GM.addEventHandler(nav_Item[i],"mouseout",function (){
-                  var speed = 0;
-                  clearInterval(timer);
-                  timer = setInterval(function (){
+                   speed = Math.floor((0 - nav_SlideBar.offsetLeft)/9);
 
-                      speed = Math.floor((0 - nav_SlideBar.offsetLeft + 5)/9);
-
-                      nav_SlideBar.style.marginLeft = nav_SlideBar.offsetLeft + speed + 'px';
-                  },20);
-              });
+                   nav_SlideBar.style.marginLeft = nav_SlideBar.offsetLeft + speed + 'px';
+                 },20);
+             });
           }
 
       // nav_SlideBar 滑动事件
