@@ -1,38 +1,36 @@
 @import "mix_default.styl"
   /*------导航栏-------*/
 .nav
+  width 100%
   height  80px
-  position  fixed
   top 0
   right 0
   left 0
   background  white
-  z-index 9999
 
-#nav_Menu
-  width auto
-  max-width 400px
-  height  80px
-  position relative
-  margin-left 100px
-  margin-top 0
+.hidden.menu
+  display: none
+
+.secondary.pointing.menu .toc.item
+  display: none
 
 .nav_Menuitem
-  width 80px
-  height  80px
+  width 100px
+  height 80px
   font-size 14px
   float left
-  text-align  center
-  line-height 81px
+  line-height 50px
+
 .nav_Menuitem>a
+  auto_mid()
   article-word_color()
   /*------导航栏下滑件--------*/
 #nav_SlideBar
-  width 80px
+  width 100px
   height  5px
   background  rgba(85,85,85,1)
   position  absolute
-  margin-top  75px
+  margin-top  60px
   margin-left 0
 
 
@@ -41,3 +39,11 @@
   position  fixed
   right 30px
   top 10px
+
+@media only screen and (max-width:700px)
+  .ul.fixed.menu
+    display: none !important
+  .secondary.pointing.menu .item,.secondary.pointing.menu .menu
+    display:none
+  .secondary.pointing.menu .toc.item
+    display:block

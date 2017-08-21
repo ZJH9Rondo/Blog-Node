@@ -164,7 +164,7 @@ router.get('/article', function(req, res, next) {
         CommentModel.getComments(postId),// 获取该文章所有留言
         PostModel.incPv(postId)];
 
-    if(req.session.user !== null){
+    if(req.session.user){
       selects.slice(2,1,PostModel.getCollections(req.session.user._id));
     }
 

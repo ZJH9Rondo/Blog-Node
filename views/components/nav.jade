@@ -1,25 +1,28 @@
-div.nav
-  ul#nav_Menu
-    div#nav_SlideBar
-    li.nav_Menuitem
-      a(href='/posts') 首页
-    li.nav_Menuitem
-      a(href='/') 首页
-    li.nav_Menuitem
-      a(href='/') 首页
-    li.nav_Menuitem
-      a(href='/') 首页
-  div.nav-setting
-    div.ui.buttons
-      div.ui.dropdown.floating.button
-        i.icon.bars
-        div.menu
-          if user
-            a.item(href='/user?author=#{user._id}') 个人主页
-            div.divider
-            a.item(href='/user/newArticle') 写文章
-            a.item(href='/user/collections?author=#{user._id}') 我的收藏集
-            a.item(href='/signout') 登出
-          else
-            a.item(id='github_sign') 登录
-            a.item(href='/signup') 注册
+div.nav.ui.inverted.vertical.masthead.center.aligned.segment
+  div.ui.container
+    ul.large.secondary.inverted.pointing.menu
+      div#nav_SlideBar
+      li.toc.item
+        i.sidebar.icon
+      li.nav_Menuitem.active.item
+        a(href='/posts') 首页
+      li.nav_Menuitem.item
+        a(href='/') 首页
+      li.nav_Menuitem.item
+        a(href='/') 首页
+      li.nav_Menuitem.item
+        a(href='/') 首页
+      li.item.right
+        div.ui.buttons
+          div.ui.dropdown.floating.button
+            i.icon.bars
+            div.menu
+              if user
+                a.item(href='/user?author=#{user._id}') 个人主页
+                div.divider
+                a.item(href='/user/newArticle') 写文章
+                a.item(href='/user/collections?author=#{user._id}') 我的收藏集
+                a.item(href='/signout') 登出
+              else
+                a.item(id='github_sign') 登录
+                a.item(href='/signup') 注册

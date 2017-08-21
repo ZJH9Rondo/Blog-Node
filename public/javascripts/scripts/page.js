@@ -6,6 +6,20 @@ define(['GM'],function (GM){
   // nav-setting dropdown
   (function (){
       $('.ui .dropdown').dropdown();
+
+      // create sidebar and attach to menu open
+      $('.ui.sidebar').sidebar('attach events', '.toc.item');
+      // fix menu when passed
+      $('.masthead')
+        .visibility({
+          once: false,
+          onBottomPassed: function() {
+            $('.fixed.menu').transition('fade in');
+          },
+          onBottomPassedReverse: function() {
+            $('.fixed.menu').transition('fade out');
+          }
+        });
   })();
 
   // nav slideBar
@@ -22,7 +36,7 @@ define(['GM'],function (GM){
                  start = nav_SlideBar.offsetLeft;
                  end = this.offsetLeft;
                  offset = end - start;
-
+                 console.log(start,end);
                  if(offset == '0'){
                    return;
                  }else{
@@ -33,7 +47,7 @@ define(['GM'],function (GM){
                      }else{
                        speed = Math.ceil((end - nav_SlideBar.offsetLeft)/9);
                      }
-
+                     console.log('正在滑动',nav_SlideBar.offsetLeft);
                      nav_SlideBar.style.marginLeft = nav_SlideBar.offsetLeft + speed + 'px';
                    },20);
                  }
@@ -45,10 +59,10 @@ define(['GM'],function (GM){
                  timer = setInterval(function (){
 
                    speed = Math.floor((0 - nav_SlideBar.offsetLeft)/9);
-
+                   console.log('正在返回');
                    nav_SlideBar.style.marginLeft = nav_SlideBar.offsetLeft + speed + 'px';
                  },20);
-             });
+              });
           }
 
       // nav_SlideBar 滑动事件
