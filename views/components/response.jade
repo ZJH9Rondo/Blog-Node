@@ -1,29 +1,35 @@
 <!--following menu-->
 div.ui.large.top.fixed.hidden.menu
   div.ui.container
-    div#nav_SlideBar
-    a.active.item.nav_Menuitem(href='/posts') 首页
-    a.item.nav_Menuitem(href='/') 首页
-    a.item.nav_Menuitem(href='/') 首页
-    a.item.nav_Menuitem(href='/') 首页
-    div.item.right
-      div.ui.buttons
-        div.ui.dropdown.floating.button
-          i.icon.bars
-          div.menu
-            if user
-              a.item(href='/user?author=#{user._id}') 个人主页
-              div.divider
-              a.item(href='/user/newArticle') 写文章
-              a.item(href='/user/collections?author=#{user._id}') 我的收藏集
-              a.item(href='/signout') 登出
-            else
-              a.item(id='github_sign') 登录
-              a.item(href='/signup') 注册
+    a.active.item(href='/posts') 首页
+    a.item(href='/') 首页
+    a.item(href='/') 首页
+    a.item(href='/') 首页
+    div.menu.right
+      if user
+        div.ui.styled.accordion
+          div.active.title
+            i.dropdown.icon
+            ZJH9Rondo
+          div.active.content
+            a.item(href='/user?author=#{user._id}') 个人主页
+            div.divider
+            a.item(href='/user/newArticle') 写文章
+            a.item(href='/user/collections?author=#{user._id}') 我的收藏集
+            a.item(href='/signout') 登出
+      else
+        div.item
+          a.ui.button.github_sign 登录
+        div.item
+          a.ui.primary.button(href='/signup') 注册
 
 <!--sidebar menu-->
-div.ui.vertical.inverted.sidebar.menu
-  a.active.item.nav_Menuitem(href='/posts') 首页
-  a.item.nav_Menuitem(href='/') 首页
-  a.item.nav_Menuitem(href='/') 首页
-  a.item.nav_Menuitem(href='/') 首页
+ul.ui.vertical.inverted.sidebar.menu
+  li.item.active
+    a(href='/posts') 首页
+  li.item
+    a(href='/') 首页
+  li.item
+    a(href='/') 首页
+  li.item
+    a(href='/') 首页

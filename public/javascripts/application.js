@@ -8,22 +8,24 @@ requirejs(['GM','page','upload'],function(GM,page,upload){
   // 首页处理数据展示
   (function (){
     var Ajax = GM.ajax(); // 实例化一个Ajax对象
-    var github_signin = document.getElementById('github_sign');
+    var github_sign = document.getElementsByClassName('github_sign');
 
-    if(github_signin){
-      github_signin.addEventListener('click',function (){
-        Ajax.init({
-          url: '/github',
-          method: 'get',
-          datatype: 'json',
-          success: function (result){
-            result = JSON.parse(result);
-            var url = 'https://github.com/login/oauth/authorize?client_id=' + result;
+    if(github_sign){
+      for(var i = 0;i < github_sign.length;i++){
+        github_signin[i].addEventListener('click',function (){
+          Ajax.init({
+            url: '/github',
+            method: 'get',
+            datatype: 'json',
+            success: function (result){
+              result = JSON.parse(result);
+              var url = 'https://github.com/login/oauth/authorize?client_id=' + result;
 
-            window.location = url;
-          }
-        });
-      },false);
+              window.location = url;
+            }
+          });
+        },false);
+      }
     }
   })();
 });

@@ -2,43 +2,40 @@
   /*------导航栏-------*/
 .nav
   width 100%
-  height  80px
+  height  350px
   top 0
-  right 0
   left 0
   background  white
 
+.nav_ctn
+  width auto
+  height 60px
+
 .hidden.menu
-  display: none
+  display none
 
 .secondary.pointing.menu .toc.item
-  display: none
+  display none
 
 .nav_Menuitem
   width 100px
-  height 80px
-  font-size 14px
+  height 60px
+  font-size 15px
   float left
-  line-height 50px
+  line-height 55px
 
 .nav_Menuitem>a
   auto_mid()
-  article-word_color()
-  /*------导航栏下滑件--------*/
-#nav_SlideBar
-  width 100px
-  height  5px
-  background  rgba(85,85,85,1)
-  position  absolute
-  margin-top  60px
-  margin-left 0
+  letter-spacing 4px
+  color rgba(255, 255, 255, 0.7)
+.nav_Menuitem>a:hover
+  color #FFFFFF !important
 
-
-  /*-------nav下拉菜单--------*/
-.nav-setting
-  position  fixed
-  right 30px
-  top 10px
+.nav_User
+  width 200px
+  height 60px
+  float right
+  padding 10px
 
 @media only screen and (max-width:700px)
   .ul.fixed.menu
@@ -47,3 +44,5 @@
     display:none
   .secondary.pointing.menu .toc.item
     display:block
+  .masthead.segment
+    min-height 350px

@@ -5,8 +5,6 @@ define(['GM'],function (GM){
       collect = GM.getDom('.addcollect');
   // nav-setting dropdown
   (function (){
-      $('.ui .dropdown').dropdown();
-
       // create sidebar and attach to menu open
       $('.ui.sidebar').sidebar('attach events', '.toc.item');
       // fix menu when passed
@@ -20,66 +18,19 @@ define(['GM'],function (GM){
             $('.fixed.menu').transition('fade out');
           }
         });
+      //
+      $('.ui.accordion').accordion('refresh');
   })();
 
-  // nav slideBar
-  (function (){
-      var offset, // SlideBar 运动距离
-          start,  // SlideBar 起始位置
-          end,
-          timer;
+// 收藏文章
+// 绑定点击事件
+(function (){
+  var Ajax = GM.ajax();
 
-      function slideBar(i){
-              GM.addEventHandler(nav_Item[i],"mouseover",function (event){
-                 var speed = 0;
-
-                 start = nav_SlideBar.offsetLeft;
-                 end = this.offsetLeft;
-                 offset = end - start;
-                 console.log(start,end);
-                 if(offset == '0'){
-                   return;
-                 }else{
-                   clearInterval(timer);
-                   timer = setInterval(function (){
-                     if((end - nav_SlideBar.offsetLeft) < 0){
-                       speed = Math.floor((end - nav_SlideBar.offsetLeft)/9);
-                     }else{
-                       speed = Math.ceil((end - nav_SlideBar.offsetLeft)/9);
-                     }
-                     console.log('正在滑动',nav_SlideBar.offsetLeft);
-                     nav_SlideBar.style.marginLeft = nav_SlideBar.offsetLeft + speed + 'px';
-                   },20);
-                 }
-             });
-
-             GM.addEventHandler(nav_Item[i],"mouseout",function (){
-                 var speed = 0;
-                 clearInterval(timer);
-                 timer = setInterval(function (){
-
-                   speed = Math.floor((0 - nav_SlideBar.offsetLeft)/9);
-                   console.log('正在返回');
-                   nav_SlideBar.style.marginLeft = nav_SlideBar.offsetLeft + speed + 'px';
-                 },20);
-              });
-          }
-
-      // nav_SlideBar 滑动事件
-        for (var i = 0; i < nav_Item.length; i++) {
-            slideBar(i);
-        }
-  })();
-
-    // 收藏文章
-    // 绑定点击事件
-    (function (){
-        var Ajax = GM.ajax();
-
-        for(var i = 0;i < collect.length ; i++){
-          GM.addEventHandler(collect[i],"click",function (event){
-                // 组织默认事件和冒泡
-                window.event ? window.event.cancelBubble = true : event.stopPropagation();
+  for(var i = 0;i < collect.length ; i++){
+    GM.addEventHandler(collect[i],"click",function (event){
+      // 组织默认事件和冒泡
+      window.event ? window.event.cancelBubble = true : event.stopPropagation();
 
                 var data = {
                   "author": this.getAttribute('author'),
