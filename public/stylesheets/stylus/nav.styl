@@ -37,12 +37,21 @@
   float right
   padding 10px
 
+.floowing_Mobile
+  display none
+.content
+  top 0 !important
+
 @media only screen and (max-width:700px)
   .ul.fixed.menu
-    display: none !important
+    display none !important
+  .floowing_pc
+    display none !important
+  .floowing_Mobile
+    display block
   .secondary.pointing.menu .item,.secondary.pointing.menu .menu
-    display:none
+    display none
   .secondary.pointing.menu .toc.item
-    display:block
+    display block
   .masthead.segment
     min-height 350px

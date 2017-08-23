@@ -1,8 +1,6 @@
 // 引入通用方法模块
 define(['GM'],function (GM){
-  var nav_SlideBar = GM.getDom('#nav_SlideBar'),
-      nav_Item = GM.getDom('.nav_Menuitem'),
-      collect = GM.getDom('.addcollect');
+  var collect = GM.getDom('.addcollect');
   // nav-setting dropdown
   (function (){
       // create sidebar and attach to menu open
@@ -18,8 +16,10 @@ define(['GM'],function (GM){
             $('.fixed.menu').transition('fade out');
           }
         });
-      //
-      $('.ui.accordion').accordion('refresh');
+      // show dropdown on hover
+      $('.ui.dropdown').dropdown({on:'hover'});
+      // show accordion
+      $('.ui.accordion').accordion();
   })();
 
 // 收藏文章

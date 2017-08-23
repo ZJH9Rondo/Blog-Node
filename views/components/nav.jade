@@ -11,14 +11,16 @@ div.nav.ui.inverted.vertical.masthead.center.aligned.segment
         a(href='/') 首页
       li.nav_Menuitem.item
         a(href='/') 首页
-      div.nav_User.right.item
-        if user
-          a.item(href='/user?author=#{user._id}') 个人主页
-          div.divider
-          a.item(href='/user/newArticle') 写文章
-          a.item(href='/user/collections?author=#{user._id}') 我的收藏集
-          a.item(href='/signout') 登出
-        else
+      if user
+        li.ui.right.floated.dropdown.item #{user.name}
+          i.dropdown
+          div.menu
+            a.item(href='/user?author=#{user._id}') 个人主页
+            a.item(href='/user/newArticle') 写文章
+            a.item(href='/user/collections?author=#{user._id}') 我的收藏集
+            a.item(href='/signout') 登出
+      else
+        div.right.item
           a.ui.inverted.button.github_sign 登录
           a.ui.inverted.button(href='/signup') 注册
   div.ui.text.container

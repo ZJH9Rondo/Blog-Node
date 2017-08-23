@@ -1,23 +1,41 @@
 <!--following menu-->
 div.ui.large.top.fixed.hidden.menu
-  div.ui.container
+  div.ui.styled.accordion.floowing_Mobile
+    div.title MENU
+      i.dropdown
+    div.content
+      div.accordion
+        div.title PAGE
+          i.dropdown.icon
+        div.content
+          a.item(href='/posts') 首页
+          a.item(href='/') 首页
+          a.item(href='/') 首页
+          a.item(href='/') 首页
+      if user
+        a.item(href='/user?author=#{user._id}') 个人主页
+        a.item(href='/user/newArticle') 写文章
+        a.item(href='/user/collections?author=#{user._id}') 我的收藏集
+        a.item(href='/signout') 登出
+      else
+        a.item#github_sign 登录
+        a.item(href='/signup') 注册
+
+  div.ui.container.floowing_pc
     a.active.item(href='/posts') 首页
     a.item(href='/') 首页
     a.item(href='/') 首页
     a.item(href='/') 首页
-    div.menu.right
-      if user
-        div.ui.styled.accordion
-          div.active.title
-            i.dropdown.icon
-            ZJH9Rondo
-          div.active.content
-            a.item(href='/user?author=#{user._id}') 个人主页
-            div.divider
-            a.item(href='/user/newArticle') 写文章
-            a.item(href='/user/collections?author=#{user._id}') 我的收藏集
-            a.item(href='/signout') 登出
-      else
+    if user
+      div.ui.right.floated.dropdown.item #{user.name}
+        i.dropdown
+        div.menu
+          a.item(href='/user?author=#{user._id}') 个人主页
+          a.item(href='/user/newArticle') 写文章
+          a.item(href='/user/collections?author=#{user._id}') 我的收藏集
+          a.item(href='/signout') 登出
+    else
+      div.right.menu
         div.item
           a.ui.button.github_sign 登录
         div.item
@@ -33,3 +51,17 @@ ul.ui.vertical.inverted.sidebar.menu
     a(href='/') 首页
   li.item
     a(href='/') 首页
+  if user
+   li.item
+    a(href='/user?author=#{user._id}') 个人主页
+   li.item
+    a(href='/user/newArticle') 写文章
+   li.item
+    a(href='/user/collections?author=#{user._id}') 我的收藏集
+   li.item
+    a(href='/signout') 登出
+  else
+   li.item
+    a.github_sign 登录
+   li.item
+    a(href='/signup') 注册

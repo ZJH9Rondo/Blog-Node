@@ -12,7 +12,7 @@ requirejs(['GM','page','upload'],function(GM,page,upload){
 
     if(github_sign){
       for(var i = 0;i < github_sign.length;i++){
-        github_signin[i].addEventListener('click',function (){
+        github_sign[i].addEventListener('click',function (){
           Ajax.init({
             url: '/github',
             method: 'get',
