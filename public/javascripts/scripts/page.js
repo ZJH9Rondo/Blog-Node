@@ -1,6 +1,6 @@
 // 引入通用方法模块
 define(['GM'],function (GM){
-  var collect = GM.getDom('.addcollect');
+  var collects = document.getElementsByClassName('addcollect');
   // nav-setting dropdown
   (function (){
       // create sidebar and attach to menu open
@@ -27,8 +27,8 @@ define(['GM'],function (GM){
 (function (){
   var Ajax = GM.ajax();
 
-  for(var i = 0;i < collect.length ; i++){
-    GM.addEventHandler(collect[i],"click",function (event){
+  for(var i = 0;i < collects.length ; i++){
+    collects[i].addEventListener('click',function (event){
       // 组织默认事件和冒泡
       window.event ? window.event.cancelBubble = true : event.stopPropagation();
 
@@ -38,7 +38,7 @@ define(['GM'],function (GM){
                   },
                   frontCollect;
 
-                frontCollect = this.childNodes[0];
+                collect_status = this.childNodes[0];
                 // 收藏文章的ajax请求
                 Ajax.init({
                   url: "/collect",
@@ -50,13 +50,13 @@ define(['GM'],function (GM){
 
                     var flag = result;
                     if(flag){
-                      frontCollect.src = '/images/favourite.svg';  // 收藏成功 切换标识
+                      collect_status.innerText = 'forks';
                     }else{
-                      frontCollect.src = '/images/collect_success.svg';
+                      collect_status.innerText = 'forked';
                     }
                   }
                 });
-          });
+          },false);
         }
     })();
 });

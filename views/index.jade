@@ -6,7 +6,6 @@ html
     title #{blog.title}
     script(src='https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js',type='text/javascript')
     script(src='https://cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.js',type='text/javascript')
-    script(type='text/javascript',data-main='/javascripts/application',src='/javascripts/require.js',defer async='true')
     link(rel='stylesheet',href='https://cdn.bootcss.com/semantic-ui/2.1.8/semantic.min.css')
     link(rel='stylesheet',href='/stylesheets/style.css')
   body
@@ -17,3 +16,4 @@ html
       block content
 
       include footer
+    script(type='text/javascript',data-main='/javascripts/application',src='/javascripts/require.js',defer async='true')

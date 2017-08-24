@@ -1,46 +1,44 @@
-div.article-item
-  div.writer-front
-    - if (post.author.avatar.substr(0,5) === 'https')
-      img(src='#{post.author.avatar}')
-    -else
-      img(src='/images/#{post.author.avatar}')
-  p.writer
-    a(href='/user?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}')  #{post.author.name}
-  div.article-content
-      p.article-title
-        a(href='/article?postId=#{post._id}') #{post.title}
-      pre!=post.content
-      div.article-about
-        span.tag #{post.created_at}
-        span.tag.right
-          span
-            img(src='/images/browse.svg')
+div.ui.items
+  div.item
+    div.content.self-content
+      div.meta
+        -if (post.author.avatar.substr(0,5) === 'https')
+          p.writer-front
+            img(src='#{post.author.avatar}')
+        -else
+          p.writer-front
+            img(src='/images/#{post.author.avatar}')
+        p.writer
+          a(href='/user?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}')  #{post.author.name}
+          span.tag #{post.created_at}
+      a.header.post-header(href='/article?postId=#{post._id}') #{post.title}
+      div.extra
+        div.ui.buttons
+          button.ui.button
+            span 阅读
             span #{post.pv}
-          span
-            img(src='/images/comments.svg')
+          div.or
+          button.ui.button
+            span 留言
             span #{post.commentsCount}
-          if user
-            span.favourite
-              img(src='/images/good.svg')
-              span 0
-            span.collect
-              a(class='addcollect',author='#{user._id}',post='#{post._id}')
-                if collections
-                  - var flag = false
-                  - var i = 0
-                  - for(;i<collections.length;i++){
-                     if post._id == collections[i]
-                      - flag = true
-                      - break
-                  - }
-                  if flag
-                    img(src='/images/collect_success.svg')
-                  else
-                    img(src='/images/favourite.svg')
-                else
-                  img(src='/images/favourite.svg')
-
-        if user&&post.author._id&&user._id.toString()===post.author._id.toString()
-          div.writer-edit
-            a.item(href='/article/edit?postId=#{post._id}') 编辑
-            a.item(href='/article/remove?postId=#{post._id}') 删除
+        if user
+          div.mini.ui.labeled.button(tabindex='0')
+            div.ui.red.button
+              i.heart.icon
+                i like
+            a.ui.basic.label 0
+          button.ui.primary.button.addcollect(author='#{user._id}',post='#{post._id}')
+            if collections
+              - var flag = false
+              - var i = 0
+              - for(;i<collections.length;i++){
+                  if post._id == collections[i]
+                  - flag = true
+                  - break
+              - }
+              if flag
+                i forked
+              else
+                i forks
+            else
+              i forks
