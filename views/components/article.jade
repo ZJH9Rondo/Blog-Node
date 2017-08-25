@@ -1,6 +1,6 @@
-div.ui.items
+div.ui.items.article
   div.item
-    div.content.self-content
+    div.content
       div.meta
         -if (post.author.avatar.substr(0,5) === 'https')
           p.writer-front
@@ -12,7 +12,7 @@ div.ui.items
           a(href='/user?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}')  #{post.author.name}
           span.tag #{post.created_at}
       a.header.post-header.article-header(href='/article?postId=#{post._id}') #{post.title}
-      div.descriptions.article-content!=post.content
+      div.descriptions.article-!=post.content
       div.extra
         if user&&post.author._id&&user._id.toString()===post.author._id.toString()
           div.mini.ui.floated.buttons
@@ -40,3 +40,28 @@ div.ui.items
                 i forks
             else
               i forks
+if user
+div.ui.comments
+  h3.ui.dividing.header 留言
+  if post.comments && post.comments.length>0
+  - for comment in comments
+      div.comment
+        a.avatar
+          if (post.author.avatar.substr(0,5) === 'https')
+            img(src='#{post.author.avatar}')
+          else
+            img(src='/images/#{post.author.avatar}')
+        div.content.comment-text
+          a.author(href='/user?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}')  #{post.author.name}
+          div.metadata
+            span.date #{comment.created_at}
+          div.text!=comment.content
+          div.actions
+            a.replay 回复
+            if user&&comment.author._id&&user._id.toString()===comment.author._id.toString()
+              a.reply(href='/article/rmComment?commentId=#{comment._id}') 删除
+
+form.ui.reply.form(method='post',action='/article/addComment?postId=#{post._id}',enctype='multipart/form-data')
+  div.field
+    textarea(name='content')
+  input.mini.ui.blue.button(type='submit',value='留言')

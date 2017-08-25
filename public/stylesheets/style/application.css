@@ -24,17 +24,6 @@ li {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-.content {
-  clear: both;
-  width: 80%;
-  height: auto;
-  min-height: 100%;
-  overflow: hidden;
-  position: relative;
-  top: 30px;
-  left: 10%;
-  padding: 10px;
 /*--------front----------*/
 }
 .front {

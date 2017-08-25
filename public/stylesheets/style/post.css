@@ -3,11 +3,8 @@
 .content-left {
   float: left;
   width: 70%;
-  height: 100%;
+  height: auto;
   min-height: 100%;
-}
-.self-content {
-  left: 0 !important;
 }
 .content-right {
   float: right;
@@ -37,6 +34,15 @@
   font-size: 12px;
   margin-left: 20px;
 }
+.article-item {
+  width: 80%;
+  position: relative;
+  left: 10%;
+  right: 10%;
+}
+.article {
+  padding-top: 50px;
+}
 /*-----文本样式------*/
 .post-header {
   font-size: 20px !important;
@@ -50,12 +56,6 @@
   font-size: 13px;
   text-indent: 20px;
   letter-spacing: 1px;
-}
-.article-content {
-  border-top: 1px dashed rgba(85,85,85,0.5);
-  margin-top: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
 }
 /*----文本字体颜色-----*/
 .writer>a,
