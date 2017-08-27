@@ -95,26 +95,37 @@ router.get('/checkoAuth',function (req,res,next){
                 bio: data.bio
               };
 
-            UserModel.create_new(githuber).then(function (result){
+             UserModel.check_oAuthUser(githuber.password).then(function (result){
+               // 防止二次注册
+               if(result){
+                 req.flash('success', '用户已存在，直接登录');
+                 user = result[0];
+                 // 存入session
+                 req.session.user = user;
+                 res.redirect('/posts');
+               }else{
+                 UserModel.create_new(githuber).then(function (result){
 
-              user = result.ops[0];
-              // 将用户信息存入 session
-              req.session.user = user;
-              var collectItem = {
-                author: req.session.user._id,
-                collections: []
-              };
+                   user = result.ops[0];
+                   // 将用户信息存入 session
+                   req.session.user = user;
+                   var collectItem = {
+                     author: req.session.user._id,
+                     collections: []
+                   };
 
-              UserModel.createCollect(collectItem).then(function (result){
-                // 写入 flash
-                req.flash('success', '注册成功');
-                res.redirect('/posts');
-              });
-            }).catch(function (err){
-              if(err){
-                throw err;
-              }
-            });
+                   UserModel.createCollect(collectItem).then(function (result){
+                     // 写入 flash
+                     req.flash('success', '注册成功');
+                     res.redirect('/posts');
+                   });
+                 }).catch(function (err){
+                   if(err){
+                     throw err;
+                   }
+                 });
+               }
+             });
             }
           });
         }

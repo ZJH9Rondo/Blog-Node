@@ -19,6 +19,11 @@ User.plugin('contentToHtml', {
 });
 
 module.exports = {
+    // 确认第三方注册用户数据是否存在
+    check_oAuthUser: function check_oAuthUser(githubId){
+      return User.find({'password': githubId}).exec();
+    },
+
     // 注册一个用户
     create_new: function create_new(user){
       return User.create(user).exec();

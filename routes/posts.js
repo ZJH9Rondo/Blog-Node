@@ -55,8 +55,6 @@ router.get('/user',function (req,res,next){
   });
 });
 
-
-
 // 跳转到用户文章收藏页
 router.get('/user/collections',function (req,res,next){
       // 识别当前登录用户
