@@ -41,9 +41,6 @@
 .floowing_Mobile {
   display: none;
 }
-.content {
-  top: 0 !important;
-}
 @media only screen and (max-width: 700px) {
   .ul.fixed.menu {
     display: none !important;

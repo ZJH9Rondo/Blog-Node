@@ -1,10 +1,11 @@
 extends index
 
 block content
-  div.content
+  div.content.main
     div.content-left
       - for(var i in posts){
         - var post = posts[i]
           include components/post-comment
       -}
     div.content-right
+      

@@ -88,42 +88,73 @@ router.get('/checkoAuth',function (req,res,next){
 
             if(response.statusCode === 200){
               data = JSON.parse(data);
-              var githuber = {
-                name: data.login,
-                password: data.id.toString(),
-                avatar: data.avatar_url,
-                bio: data.bio
-              };
+              data.id = data.id.toString();
+              var code_repos = {
+                   url: data.repos_url,
+                   headers: {
+                    'User-Agent': 'Rondo_blog'
+                  }
+                },
+                githuber = {
+                  name: data.login,
+                  password: data.id,
+                  avatar: data.avatar_url,
+                  repos: [],
+                  bio: data.bio
+                };
 
-             UserModel.check_oAuthUser(githuber.password).then(function (result){
-               // 防止二次注册
-               if(result){
-                 req.flash('success', '用户已存在，直接登录');
-                 user = result[0];
-                 // 存入session
-                 req.session.user = user;
-                 res.redirect('/posts');
-               }else{
-                 UserModel.create_new(githuber).then(function (result){
+             request.get(code_repos,function (err,response,data){
+               if(err){
+                 throw err;
+               }
 
-                   user = result.ops[0];
-                   // 将用户信息存入 session
-                   req.session.user = user;
-                   var collectItem = {
-                     author: req.session.user._id,
-                     collections: []
-                   };
+               if(response.statusCode === 200){
+                UserModel.check_oAuthUser(data.id).then(function (result){
+                  // 防止二次注册
 
-                   UserModel.createCollect(collectItem).then(function (result){
-                     // 写入 flash
-                     req.flash('success', '注册成功');
-                     res.redirect('/posts');
-                   });
-                 }).catch(function (err){
-                   if(err){
-                     throw err;
-                   }
-                 });
+                  if(result.length !== 0){
+                    req.flash('success', '用户已存在，直接登录');
+                    user = result[0];
+                    // 存入session
+                    req.session.user = user;
+                    res.redirect('/posts');
+                  }else{
+                    var user_repos = [];
+
+                    data = JSON.parse(data);
+                    for(let i=0; i < data.length; i++){
+                      if(!data[i].fork){
+                        user_repos.push({
+                          name: data[i].name,
+                          language: data[i].language,
+                          star: data[i].stargazers_count
+                        });
+                      }
+                    }
+
+                    githuber.repos = user_repos;
+                    UserModel.create_new(githuber).then(function (result){
+
+                      user = result.ops[0];
+                      // 将用户信息存入 session
+                      req.session.user = user;
+                      var collectItem = {
+                        author: req.session.user._id,
+                        collections: []
+                      };
+
+                      UserModel.createCollect(collectItem).then(function (result){
+                        // 写入 flash
+                        req.flash('success', '注册成功');
+                        res.redirect('/posts');
+                      });
+                    }).catch(function (err){
+                      if(err){
+                        throw err;
+                      }
+                    });
+                  }
+                });
                }
              });
             }
