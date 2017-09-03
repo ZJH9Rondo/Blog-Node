@@ -99,17 +99,20 @@ router.get('/checkoAuth',function (req,res,next){
                   name: data.login,
                   password: data.id,
                   avatar: data.avatar_url,
+                  user_url: data.html_url,
                   repos: [],
+                  description: data.name,
                   bio: data.bio
-                };
+                },
+                check_id = data.id;
 
-             request.get(code_repos,function (err,response,data){
-               if(err){
+            request.get(code_repos,function (err,response,data){
+              if(err){
                  throw err;
                }
 
-               if(response.statusCode === 200){
-                UserModel.check_oAuthUser(data.id).then(function (result){
+              if(response.statusCode === 200){
+                UserModel.check_oAuthUser(check_id).then(function (result){
                   // 防止二次注册
 
                   if(result.length !== 0){

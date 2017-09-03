@@ -1,4 +1,9 @@
 /*-----写博客样式表-------*/
+.create {
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 .create-article,
 .create-form {
   width: 95%;
@@ -16,4 +21,26 @@
   border-radius: 3px;
   border: 0;
   background: #009a61;
+}
+/**   Content tips    **/
+#tips {
+  display: none;
+  height: 40px;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+}
+#tips>p {
+  width: 80%;
+  height: 40px;
+  text-align: center;
+  font-size: 14px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }

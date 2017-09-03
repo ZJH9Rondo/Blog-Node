@@ -25,7 +25,7 @@ router.get('/posts',function (req,res,next){
           var collections = result.collections;
 
            res.render('posts', {
-              posts: posts,
+              posts: posts,      // 识别当前登录用户
               collections: collections
           });
         });
@@ -57,7 +57,6 @@ router.get('/user',function (req,res,next){
 
 // 跳转到用户文章收藏页
 router.get('/user/collections',function (req,res,next){
-      // 识别当前登录用户
       var author = req.query.author;
 
       PostModel.getCollections(author).then(function (result){
@@ -69,6 +68,16 @@ router.get('/user/collections',function (req,res,next){
               collections: collections
             });
          });
+      });
+});
+
+// 获取用户github_repos信息
+router.get('/repos',function (req,res,err){
+      var author = req.query.author;
+
+      Users.getUserById(author).then(function (result){
+         var data = result[0].repos;
+         res.json(data);
       });
 });
 

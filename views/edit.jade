@@ -20,5 +20,5 @@ block content
             input(type='text',name='title',value='#{post.title}')
           div.field.required
             lable 内容
-            textarea(name='content',rows='15')  #{post.content}
+            textarea#createform(name='content',rows='15')  #{post.content}
           input(type='submit',value='发布')

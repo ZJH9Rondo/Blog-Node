@@ -29,8 +29,14 @@ module.exports = {
       return User.create(user).exec();
     },
 
+    // 用户收藏集
     createCollect: function createCollect(collectItem){
       return Collects.create(collectItem).exec();
+    },
+
+    // 通过用户ID获取用户信息
+    getUserById: function getUserById(author){
+      return User.find({'_id': author}).exec();
     },
 
     // 通过用户名获取用户信息

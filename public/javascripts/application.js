@@ -4,28 +4,62 @@ requirejs.config({
 });
 
 requirejs(['GM','page','upload'],function(GM,page,upload){
-  // 获取后台爬取的github数据信息
-  // 首页处理数据展示
+  (function (){
+    var sign = document.getElementById('sign');
+
+    if(sign){
+      sign.addEventListener('click',function (){
+        $('.ui.basic.modal').modal('show');
+      },false);
+    }
+  })();
+
   (function (){
     var Ajax = GM.ajax(); // 实例化一个Ajax对象
-    var github_sign = document.getElementsByClassName('github_sign');
+    var github = document.getElementById('github');
 
-    if(github_sign){
-      for(var i = 0;i < github_sign.length;i++){
-        github_sign[i].addEventListener('click',function (){
+    if(github){
+      github.addEventListener('click',function (){
+        Ajax.init({
+          url: '/github',
+          method: 'get',
+          datatype: 'json',
+          success: function (result){
+            result = JSON.parse(result);
+            var url = 'https://github.com/login/oauth/authorize?client_id=' + result;
+
+            window.location = url;
+          }
+        });
+      },false);
+    }
+  })();
+
+  // 获取user_repos信息
+  (function (){
+    var repos = document.getElementById('repos'),
+        Ajax = GM.ajax(),
+        data;
+
+        if(repos){
+          data = {
+            "author": repos.getAttribute('author')
+          };
           Ajax.init({
-            url: '/github',
+            url: '/repos',
             method: 'get',
+            data: data,
             datatype: 'json',
             success: function (result){
+              var str = '';
               result = JSON.parse(result);
-              var url = 'https://github.com/login/oauth/authorize?client_id=' + result;
+              for(var i = 0;i < result.length;i++){
+                str = str + '<tr><td><div class=\'ui.rabbon.label\'>'+result[i].name+'</div></td>'+'<td>'+ result[i].language+'</td>' + '<td>' + result[i].star + '</td></tr>';
+              }
 
-              window.location = url;
+              repos.innerHTML = str;
             }
           });
-        },false);
-      }
-    }
+        }
   })();
 });

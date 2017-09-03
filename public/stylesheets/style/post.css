@@ -4,6 +4,7 @@
   padding-top: 30px;
   padding-left: 150px;
   padding-right: 150px;
+  padding-bottom: 50px;
   overflow: hidden;
 }
 .content-left {
@@ -14,7 +15,7 @@
 }
 .content-right {
   width: 40%;
-  height: 500px;
+  height: auto;
   float: right;
   min-height: 100%;
   display: block;
@@ -72,11 +73,17 @@
 }
 /*-- response style --*/
 @media only screen and (max-width: 700px) {
-  .content-right {
-    display: none;
+  .main {
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 30px;
   }
   .content-left {
     width: 100%;
+  }
+  .content-right {
+    display: none;
   }
   .self-content {
     width: 100%;

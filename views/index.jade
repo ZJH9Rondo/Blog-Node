@@ -13,7 +13,28 @@ html
     div.pusher
       include components/nav
 
+      div.ui.basic.modal
+        i.close.icon
+        div.header  登录
+        div.image.content
+          div.image
+            i.github.icon
+            div.extra.content
+              div.ui.buttons
+                div.ui.basic.green.button#github Github Sign
+        div.image.content
+          div.image
+            i.sign.in.icon
+            div.extra.content
+              div.ui.buttons
+                a.ui.basic.green.button(href='/signin') Blog Sign
+        div.actions
+          div.two.fluid.ui.inverted.buttons
+            div.ui.ok.green.basic.inverted.button
+              i.remove.icon
+              b 取消
+
       block content
 
-      include footer
+      include components/footer
     script(type='text/javascript',data-main='/javascripts/application',src='/javascripts/require.js',defer async='true')
