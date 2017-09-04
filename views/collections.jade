@@ -1,53 +1,59 @@
 extends index
 
 block content
-  div.content
-    div.content-left
-      - for(var i = 0;i<collections.length;i++){
-        - var post = collections[i]
-          div.ui.items
-            div.item
-              div.content.self-content
-                div.meta
-                  -if (post.author.avatar.substr(0,5) === 'https')
-                    p.writer-front
-                      img(src='#{post.author.avatar}')
-                  -else
-                    p.writer-front
-                      img(src='/images/#{post.author.avatar}')
-                  p.writer
-                    a(href='/user?author=#{post.author._id}',data-title='#{post.author.name}',data-content='#{post.author.bio}')  #{post.author.name}
-                    span.tag #{post.created_at}
-                a.header.post-header(href='/article?postId=#{post._id}') #{post.title}
-                div.extra
-                  div.ui.buttons
-                    button.ui.button
-                      span 阅读
-                      span #{post.pv}
-                    div.or
-                    button.ui.button
-                      span 留言
-                      span #{post.commentsCount}
-                  if user
-                    div.mini.ui.labeled.button(tabindex='0')
-                      div.ui.red.button
-                        i.heart.icon
-                          i like
-                      a.ui.basic.label 0
-                    button.ui.primary.button.addcollect(author='#{user._id}',post='#{post._id}')
-                      if collections
-                        - var flag = false
-                        - check_fork = collections
-                        - var j = 0
-                        - for(;j<check_fork.length;j++){
-                            if post._id == check_fork[j]
-                            - flag = true
-                            - break
-                        - }
-                        if flag
-                          i forked
-                        else
-                          i forks
-                      else
-                        i forks
-      -}
+  div.ui.items
+    div.item
+      div.content.self-content.collections
+        div.meta
+        - for(var i = 0;i<collections.length;i++){
+          - var collect = collections[i]
+          div.meta
+          -if (collect.author.avatar.substr(0,5) === 'https')
+            p.writer-front
+              img(src='#{collect.author.avatar}')
+          -else
+            p.writer-front
+              img(src='/img/#{collect.author.avatar}')
+          p.writer
+            a(href='/user?author=#{collect.author._id}',data-title='#{collect.author.name}',data-content='#{collect.author.bio}')  #{collect.author.name}
+            span.tag #{collect.created_at}
+          a.header.post-header(href='/article?postId=#{collect._id}') #{collect.title}
+          div.extra
+            div.mini.ui.buttons
+              button.mini.ui.button
+                i.unhide.green.icon
+                span #{collect.pv}
+              div.or
+              button.mini.ui.button
+                i.talk.outline.icon
+                span #{collect.commentsCount}
+            button.mini.ui.button.favourite(user='#{user._id}',post='#{collect._id}')
+              -var status = false
+              -var favourite = collect.favourite
+              -for(var k in favourite){
+                  -count++
+                  if user._id === favourite[k]
+                  -status = true
+              -}
+              if status
+                i.thumbs.outline.up.red.icon
+              else
+                i.thumbs.outline.up.icon
+              span #{collect.favourite_count}
+            button.mini.ui.primary.button.addcollect(author='#{user._id}',post='#{collect._id}')
+              if collections
+                - var flag = false
+                - var check_fork = collections
+                - var j = 0
+                - for(;j<check_fork.length;j++){
+                    if collect._id == check_fork[j]
+                    - flag = true
+                    - break
+                - }
+                if flag
+                  i forked
+                else
+                  i forks
+              else
+                i forks
+        -}

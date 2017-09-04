@@ -141,11 +141,21 @@ define(['GM'],function (GM){
       for(var i = 0,len = clipboardData.items.length;i < len; i++){
         if(clipboardData.items[i].kind == 'file' || clipboardData.items[i].type.indexOf('image') > -1){
           imageFile = clipboardData.items[i].getAsFile();
+        }else if(clipboardData.items[i].kind == 'string' || clipboardData.items[i].type.indexOf('text') > -1){
+          var text = clipboardData.getData('text/plain') || clipboardData.getData('text');
+
+          createform.value = createform.value.substring(0,createform.selectionStart) + text + createform.value.substring(createform.selectionEnd,createform.value.length);
+
+          createform.selectionStart = createform.selectionEnd = createform.selectionStart + text.length; //移动光标
         }
       }
 
-      // getToken and upload base64_str
-      getToken(imageFile);
+      if(imageFile){
+        // getToken and upload base64_str
+        getToken(imageFile);
+      }else{
+        return;
+      }
    },false);
 
     // textarea drag event

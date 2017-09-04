@@ -20,11 +20,18 @@ div.ui.items
             a.or
             a.ui.positive.button(href='/article/remove?postId=#{post._id}') 删除
         if user
-          div.ui.labeled.button(tabindex='0')
-            div.mini.ui.red.button
-              i.heart.icon
-                i like
-            a.ui.basic.label 0
+          button.mini.ui.button.favourite(user='#{user._id}',post='#{post._id}')
+            -var status = false
+            -var favourite = post.favourite
+            -for(var k in favourite){
+                if user._id === favourite[k]
+                -status = true
+            -}
+            if status
+              i.thumbs.outline.up.red.icon
+            else
+              i.thumbs.outline.up.icon
+            span #{post.favourite_count}
           button.mini.ui.primary.button.addcollect(author='#{user._id}',post='#{post._id}')
             if collections
               - var flag = false

@@ -97,6 +97,29 @@ module.exports = {
       .exec();
   },
 
+  // 文章点赞
+  favourite: function favourite(user,post){
+    return Post.update({"_id": post},{$addToSet:{"favourite":user}}).exec();
+  },
+
+  // 取消点赞
+  unfavourite: function unfavourite(user,post){
+    return Post.update({"_id": post},{$pull:{"favourite":user}}).exec();
+  },
+
+  // 点赞总量+1
+  favourite_count: function favourite_count(post,number){
+    console.log(number);
+    if(number === 1){
+      return Post.update({"_id": post},{$inc: {favourite_count: 1}}).exec();
+    }else{
+      return Post.update({"_id": post},{$inc: {favourite_count: -1}}).exec();
+    }
+  },
+
+  // 点赞数量-1
+
+
   // 通过文章 id 获取一篇原生文章（编辑文章）
   getRawPostById: function getRawPostById(postId) {
     return Post

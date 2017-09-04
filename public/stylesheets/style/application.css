@@ -1,4 +1,8 @@
 /*-----全局样式-------*/
+html {
+  height: auto !important;
+  min-height: 100% !important;
+}
 a {
   text-decoration: none;
 }

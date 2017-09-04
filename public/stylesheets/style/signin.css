@@ -21,3 +21,10 @@
   -moz-border-radius: 2px;
   border-radius: 2px;
 }
+@media only screen and (max-width: 700px) {
+  .sign_form {
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+}

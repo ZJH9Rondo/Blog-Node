@@ -26,85 +26,125 @@ define(['GM'],function (GM){
 (function (){
   var article = document.getElementsByClassName('article');
 
-  var images = article[0].getElementsByTagName('img');
+  if(article[0]){
+    var images = article[0].getElementsByTagName('img');
 
-  // 设置弹出曾展示放大图片
-  for(var i = 0;i < images.length; i++){
+    // 设置弹出曾展示放大图片
+    for(var i = 0;i < images.length; i++){
 
-    images[i].addEventListener('mouseover',function (event){
-      event = event || window.event;
-      event.stopPropagation();
-      console.log('1111111111');
-      this.style.cursor = 'url(./img/mouse.svg),auto';
-    },false);
+      images[i].addEventListener('mouseover',function (event){
+        event = event || window.event;
+        event.stopPropagation();
 
-    images[i].addEventListener('mouseout',function (event){
-      event = event || window.event;
-      event.stopPropagation();
-      console.log('1111111111');
-      this.style.cursor = 'default';
-    },false);
+        this.style.cursor = 'url(./img/mouse.svg),auto';
+      },false);
 
-    images[i].addEventListener('click',function (event){
-      event = event || window.event;
+      images[i].addEventListener('mouseout',function (event){
+        event = event || window.event;
+        event.stopPropagation();
 
-      event.stopPropagation();
-      var cover = document.createElement('div'),
-          body = document.getElementsByTagName('body'),
-          img = document.createElement('img'),
-          src = this.getAttribute('src');
+        this.style.cursor = 'default';
+      },false);
 
-      cover.className = 'ui dimmer modals page transition visible active';
-      img.src = src;
-      img.className = 'modal_img';
-      cover.addEventListener('click',function (event){
+      images[i].addEventListener('click',function (event){
         event = event || window.event;
 
         event.stopPropagation();
-        cover.className = 'ui dimmer modals page transition visible';
-        body[0].removeChild(cover);
-      });
-      cover.appendChild(img);
-      body[0].appendChild(cover);
-    },false);
+        var cover = document.createElement('div'),
+            body = document.getElementsByTagName('body'),
+            img = document.createElement('img'),
+            src = this.getAttribute('src');
+
+        cover.className = 'ui dimmer modals page transition visible active';
+        img.src = src;
+        img.className = 'modal_img';
+        cover.addEventListener('click',function (event){
+          event = event || window.event;
+
+          event.stopPropagation();
+          cover.className = 'ui dimmer modals page transition visible';
+          body[0].removeChild(cover);
+        });
+        cover.appendChild(img);
+        body[0].appendChild(cover);
+      },false);
+    }
   }
 })();
 
-// 收藏文章
-// 绑定点击事件
+// 文章点赞事件
+(function (){
+    var favourites = document.getElementsByClassName('favourite'),
+        Ajax = GM.ajax();
+
+    if(favourites.length === 0){
+      return;
+    }else{
+      for(var i=0;i < favourites.length; i++){
+        favourites[i].addEventListener('click',function (event){
+          event = event || window.event;
+
+          event.stopPropagation();
+          var data = {
+            "user": this.getAttribute('user'),
+            "post": this.getAttribute('post')
+          },
+          that = this;
+
+          Ajax.init({
+            url:'/favourite',
+            method: 'get',
+            datatype: 'JSON',
+            data: data,
+            success: function (result){
+              result = JSON.parse(result);
+
+              if(result.favourite === 'failed'){
+                that.childNodes[0].className = 'thumbs outline up red icon';
+              }else{
+                that.childNodes[0].className = 'thumbs outline up icon';
+              }
+            }
+          });
+        },false);
+      }
+    }
+})();
+
+// 收藏文章事件
 (function (){
   var Ajax = GM.ajax();
 
   for(var i = 0;i < collects.length ; i++){
-    collects[i].addEventListener('click',function (event){
-      // 组织默认事件和冒泡
-      window.event ? window.event.cancelBubble = true : event.stopPropagation();
+      collects[i].addEventListener('click',function (event){
+          // 组织默认事件和冒泡
+          window.event ? window.event.cancelBubble = true : event.stopPropagation();
+          var data = {
+            "author": this.getAttribute('author'),
+            "post": this.getAttribute('post')
+            },
+            frontCollect;
 
-                var data = {
-                  "author": this.getAttribute('author'),
-                  "post": this.getAttribute('post')
-                  },
-                  frontCollect;
+          collect_status = this.childNodes[0];
+          // 收藏文章的ajax请求
+          Ajax.init({
+            url: "/collect",
+            datatype: "JSON",
+            data: data,
+            method: "get",
+            success: function (result){
+              result = JSON.parse(result);
 
-                collect_status = this.childNodes[0];
-                // 收藏文章的ajax请求
-                Ajax.init({
-                  url: "/collect",
-                  datatype: "JSON",
-                  data: data,
-                  method: "get",
-                  success: function (result){
-                    result = JSON.parse(result);
+              var flag = result;
+              if(flag){
+                collect_status.innerText = 'forks';
+              }else{
+                collect_status.innerText = 'forked';
+              }
+            }
+          });
 
-                    var flag = result;
-                    if(flag){
-                      collect_status.innerText = 'forks';
-                    }else{
-                      collect_status.innerText = 'forked';
-                    }
-                  }
-                });
-          },false);
-        }
+        },false);
+      }
     })();
 });

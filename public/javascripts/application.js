@@ -4,6 +4,7 @@ requirejs.config({
 });
 
 requirejs(['GM','page','upload'],function(GM,page,upload){
+  // 用户登录浮出层
   (function (){
     var sign = document.getElementById('sign');
 
@@ -14,6 +15,7 @@ requirejs(['GM','page','upload'],function(GM,page,upload){
     }
   })();
 
+  // github第三方登录token认证
   (function (){
     var Ajax = GM.ajax(); // 实例化一个Ajax对象
     var github = document.getElementById('github');

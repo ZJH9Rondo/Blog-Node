@@ -43,10 +43,10 @@
   margin-left 20px
 
 .article-item
-  width 80%
+  width 90%
   position relative
-  left 10%
-  right 10%
+  left 5%
+  right 5%
   padding-top 30px
   padding-bottom 30px
 
@@ -64,6 +64,9 @@
   height auto
   midver_abs()
 
+.collections
+  padding-left 5% !important
+
 /*-----文本样式------*/
 .post-header
   font-size 20px !important
@@ -74,9 +77,9 @@
   color rgba(85,85,85,1) !important
 
 .descriptions>ul
-  font-size 13px
+  font-size 14px
   text-indent 20px
-  letter-spacing 1px
+  letter-spacing 0.5px
 
 /*----文本字体颜色-----*/
 .writer>a,.article-title>a,.comment-user>a,.comment-user>span
@@ -84,15 +87,8 @@
 
 /*-- response style --*/
 @media only screen and (max-width:700px)
-  .main
-    padding-top 20px
-    padding-left 10px
-    padding-right 10px
-    padding-bottom 30px
   .content-left
     width 100%
-  .content-right
-    display none
   .self-content
     width 100%
     top 5px
@@ -102,3 +98,12 @@
     font-size 14px
   .article
     padding-top 20px
+  .content-right
+    display none
+    
+@media only screen and (max-width:768px)
+  .main
+    padding-top 20px
+    padding-left 10px
+    padding-right 10px
+    padding-bottom 30px

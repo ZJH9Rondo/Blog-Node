@@ -121,6 +121,51 @@ router.get('/collect',function (req,res,next){
           });
 });
 
+// 文章点赞接口
+router.get('/favourite',function (req,res,next){
+  var user = req.query.user,
+      post = req.query.post;
+
+  PostModel.getPosts(user).then(function (result){
+    var favourites = result[0].favourite,
+        flag = false;
+
+    if(favourites === 0){
+      flag = false;
+    }else{
+      for(var i=0;i < favourites.length; i++){
+        if(user === favourites[i]){
+          flag = true;
+        }
+      }
+    }
+
+    if(flag){
+      PostModel.unfavourite(user,post).then(function (result){
+        var count = -1;
+        PostModel.favourite_count(post,count).then(function (result){
+          var status = {
+            "favourite": 'success'
+          };
+
+          return res.json(status);
+        });
+      });
+    }else{
+      PostModel.favourite(user,post).then(function (result){
+        var count = 1;
+        PostModel.favourite_count(post,count).then(function (result,count){
+          var status = {
+            "favourite": 'failed'
+          };
+
+          return res.json(status);
+        });
+      });
+    }
+  });
+});
+
 // GET /posts/create 发表文章页
 router.get('/user/newArticle', checkLogin, function(req, res, next) {
     res.render('create');
@@ -132,6 +177,7 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
     var author = req.query.author;
     var title = req.fields.title;
     var content = req.fields.content;
+    var favourite = [];
 
     // 校验数据合法性
     try {
@@ -151,7 +197,9 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
    author: author,
    title: title,
    content: content,
-   pv: 0
+   pv: 0,
+   favourite: favourite,
+   favourite_count: 0
  };
 
  PostModel.create(post)
@@ -160,7 +208,8 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
       post = result.ops[0];
       req.flash('success', '发表成功');
       // 发表成功后跳转到该文章页
-      return res.redirect(`/article?postId=${post._id}`); // 必须使用 ``，否则读取不成功
+      // 必须使用 ``，否则读取不成功
+      return res.redirect(`/article?postId=${post._id}`);
     });
 });
 

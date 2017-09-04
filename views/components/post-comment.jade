@@ -13,26 +13,33 @@ div.ui.items
           span.tag #{post.created_at}
       a.header.post-header(href='/article?postId=#{post._id}') #{post.title}
       div.extra
-        div.ui.buttons
+        div.mini.ui.buttons
           button.mini.ui.button
-            span 阅读
+            i.unhide.green.icon
             span #{post.pv}
           div.or
           button.mini.ui.button
-            span 留言
+            i.talk.outline.icon
             span #{post.commentsCount}
         if user
-          div.mini.ui.labeled.button(tabindex='0')
-            div.mini.ui.red.button
-              i.heart.icon
-                i like
-            a.ui.basic.label 0
+          button.mini.ui.button.favourite(user='#{user._id}',post='#{post._id}')
+            -var status = false
+            -var favourite = post.favourite
+            -for(var j in favourite){
+                if user._id === favourite[j]
+                -status = true
+            -}
+            if status
+              i.thumbs.outline.up.red.icon
+            else
+              i.thumbs.outline.up.icon
+            span #{post.favourite_count}
           button.mini.ui.primary.button.addcollect(author='#{user._id}',post='#{post._id}')
             if collections
               - var flag = false
               - var i = 0
               - for(;i<collections.length;i++){
-                  if post._id == collections[i]
+                if post._id == collections[i]
                   - flag = true
                   - break
               - }
