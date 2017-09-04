@@ -20,7 +20,55 @@ define(['GM'],function (GM){
       $('.ui.dropdown').dropdown({on:'hover'});
       // show accordion
       $('.ui.accordion').accordion();
-  })();
+})();
+
+// 文章页面图片弹出层展示
+(function (){
+  var article = document.getElementsByClassName('article');
+
+  var images = article[0].getElementsByTagName('img');
+
+  // 设置弹出曾展示放大图片
+  for(var i = 0;i < images.length; i++){
+
+    images[i].addEventListener('mouseover',function (event){
+      event = event || window.event;
+      event.stopPropagation();
+      console.log('1111111111');
+      this.style.cursor = 'url(./img/mouse.svg),auto';
+    },false);
+
+    images[i].addEventListener('mouseout',function (event){
+      event = event || window.event;
+      event.stopPropagation();
+      console.log('1111111111');
+      this.style.cursor = 'default';
+    },false);
+
+    images[i].addEventListener('click',function (event){
+      event = event || window.event;
+
+      event.stopPropagation();
+      var cover = document.createElement('div'),
+          body = document.getElementsByTagName('body'),
+          img = document.createElement('img'),
+          src = this.getAttribute('src');
+
+      cover.className = 'ui dimmer modals page transition visible active';
+      img.src = src;
+      img.className = 'modal_img';
+      cover.addEventListener('click',function (event){
+        event = event || window.event;
+
+        event.stopPropagation();
+        cover.className = 'ui dimmer modals page transition visible';
+        body[0].removeChild(cover);
+      });
+      cover.appendChild(img);
+      body[0].appendChild(cover);
+    },false);
+  }
+})();
 
 // 收藏文章
 // 绑定点击事件

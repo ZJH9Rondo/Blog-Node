@@ -6,7 +6,6 @@ define(['GM'],function (GM){
 
   if(document.getElementById('createform')){
     (function (){
-              console.log('1111111111');
         var createform = document.getElementById('createform'),
             tips = document.getElementById('tips'),
             Ajax = GM.ajax(),

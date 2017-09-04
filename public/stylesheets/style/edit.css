@@ -1,4 +1,9 @@
 /*------编辑文章页面--------*/
+.edit {
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 .article-edit {
   width: 90%;
   height: auto;

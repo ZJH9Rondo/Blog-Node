@@ -15,18 +15,28 @@ block content
               -if (user.avatar.substr(0,5) === 'https')
                 img(src='#{user.avatar}')
               -else
-                img(src='/images/#{user.avatar}')
+                img(src='/img/#{user.avatar}')
             div.content
               div.header #{user.name}
               div.meta #{user.bio}
               div.description #{user.description}
-            div.extra.content
-              div.ui.buttons
-                a.ui.basic.green.button(href='#{user.user_url}') Floow
+            if user.user_url
+              div.extra.content
+                div.ui.buttons
+                  a.ui.basic.green.button(href='#{user.user_url}') Floow
+          if user.user_url
+            table.ui.celled.table
+              thead
+                tr
+                  th Responsities
+                  th Language
+                  th Star
+              tbody#repos(author='#{user._id}')
+          else
           table.ui.celled.table
             thead
               tr
-                th Responsities
-                th Language
-                th Star
-            tbody#repos(author='#{user._id}')
+                th Title
+                th Read
+                th About
+            tbody

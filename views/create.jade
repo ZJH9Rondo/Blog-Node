@@ -9,7 +9,7 @@ block content
         - if (user.avatar.substr(0,5) === 'https')
           img(src='#{user.avatar}')
         -else
-          img(src='/images/#{user.avatar}')
+          img(src='/img/#{user.avatar}')
       p.editor
         a(href='/posts?author=#{user._id}',data-title='',data-content='#{user.bio}')  #{user.name}
 
