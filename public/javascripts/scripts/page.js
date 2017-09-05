@@ -104,6 +104,7 @@ define(['GM'],function (GM){
               }else{
                 that.childNodes[0].className = 'thumbs outline up icon';
               }
+              that.childNodes[1].innerText = parseFloat(that.childNodes[1].innerText) + result.count;
             }
           });
         },false);

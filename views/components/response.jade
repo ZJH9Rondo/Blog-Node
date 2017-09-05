@@ -12,13 +12,25 @@ div.ui.large.top.fixed.hidden.menu
           a.item(href='/') 首页
           a.item(href='/') 首页
       if user
-        a.item(href='/user?author=#{user._id}') 个人主页
-        a.item(href='/user/newArticle') 写文章
-        a.item(href='/user/collections?author=#{user._id}') 我的收藏集
-        a.item(href='/signout') 登出
+        a.item(href='/user?author=#{user._id}')
+          i.user.icon
+          span 个人主页
+        a.item(href='/user/newArticle')
+          i.write.icon
+          span 写文章
+        a.item(href='/user/collections?author=#{user._id}')
+          i.folder.open.outline.icon
+          span 我的收藏集
+        a.item(href='/signout')
+          i.sign.out.icon
+          span 登出
       else
-        a.item#github_sign 登录
-        a.item(href='/signup') 注册
+        a.item#github_sign
+          i.sign.in.icon
+          span 登录
+        a.item(href='/signup')
+          i.add.user.icon
+          span 注册
 
   div.ui.container.floowing_pc
     a.active.item(href='/posts') 首页
@@ -29,16 +41,28 @@ div.ui.large.top.fixed.hidden.menu
       div.ui.right.floated.dropdown.item #{user.name}
         i.dropdown
         div.menu
-          a.item(href='/user?author=#{user._id}') 个人主页
-          a.item(href='/user/newArticle') 写文章
-          a.item(href='/user/collections?author=#{user._id}') 我的收藏集
-          a.item(href='/signout') 登出
+          a.item(href='/user?author=#{user._id}')
+            i.user.icon
+            span 个人主页
+          a.item(href='/user/newArticle')
+            i.write.icon
+            span 写文章
+          a.item(href='/user/collections?author=#{user._id}')
+            i.folder.open.outline.icon
+            span 我的收藏集
+          a.item(href='/signout')
+            i.sign.out.icon
+            span 登出
     else
       div.right.menu
         div.item
-          a.ui.button.github_sign 登录
+          a.ui.button.github_sign
+            i.sign.in.icon
+            span 登录
         div.item
-          a.ui.primary.button(href='/signup') 注册
+          a.ui.primary.button(href='/signup')
+            i.add.user.icon
+            span 注册
 
 <!--sidebar menu-->
 ul.ui.vertical.inverted.sidebar.menu
@@ -52,15 +76,27 @@ ul.ui.vertical.inverted.sidebar.menu
     a(href='/') 首页
   if user
    li.item
-    a(href='/user?author=#{user._id}') 个人主页
+    a(href='/user?author=#{user._id}')
+      i.user.icon
+      span 个人主页
    li.item
-    a(href='/user/newArticle') 写文章
+    a(href='/user/newArticle')
+      i.write.icon
+      span 写文章
    li.item
-    a(href='/user/collections?author=#{user._id}') 我的收藏集
+    a(href='/user/collections?author=#{user._id}')
+      i.folder.open.outline.icon
+      span 我的收藏集
    li.item
-    a(href='/signout') 登出
+    a(href='/signout')
+      i.sign.out.icon
+      span 登出
   else
    li.item
-    a.github_sign 登录
+    a.github_sign
+      i.sign.in.icon
+      span 登录
    li.item
-    a(href='/signup') 注册
+    a(href='/signup')
+      i.add.user.icon
+      span 注册

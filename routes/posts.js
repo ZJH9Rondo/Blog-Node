@@ -126,11 +126,11 @@ router.get('/favourite',function (req,res,next){
   var user = req.query.user,
       post = req.query.post;
 
-  PostModel.getPosts(user).then(function (result){
-    var favourites = result[0].favourite,
+  PostModel.getPostById(post).then(function (result){
+    var favourites = result.favourite,
         flag = false;
 
-    if(favourites === 0){
+    if(favourites === null){
       flag = false;
     }else{
       for(var i=0;i < favourites.length; i++){
@@ -141,22 +141,24 @@ router.get('/favourite',function (req,res,next){
     }
 
     if(flag){
-      PostModel.unfavourite(user,post).then(function (result){
+      PostModel.unfavourite(post,user).then(function (result){
         var count = -1;
         PostModel.favourite_count(post,count).then(function (result){
           var status = {
-            "favourite": 'success'
+            "favourite": 'success',
+            "count": count
           };
 
           return res.json(status);
         });
       });
     }else{
-      PostModel.favourite(user,post).then(function (result){
+      PostModel.favourite(post,user).then(function (result){
         var count = 1;
-        PostModel.favourite_count(post,count).then(function (result,count){
+        PostModel.favourite_count(post,count).then(function (result){
           var status = {
-            "favourite": 'failed'
+            "favourite": 'failed',
+            "count": count
           };
 
           return res.json(status);
