@@ -25,7 +25,7 @@
 
   ![mobile_article4](https://github.com/ZJH9Rondo/Blog-Node/blob/master/public/ReadMeIMG/mobile_article4.png)
 
-  ![mobile_sign](https://github.com/ZJH9Rondo/Blog-Node/blob/master/public/ReadMeIMG/mobile_sign.png)
+  ![mobile_signin](https://github.com/ZJH9Rondo/Blog-Node/blob/master/public/ReadMeIMG/mobile_signin.png)
 
 ### 如何使用
   * 将当前项目文件克隆至本地
