@@ -138,9 +138,9 @@ define(['GM'],function (GM){
 
               var flag = result;
               if(flag){
-                collect_status.innerText = 'forks';
+                collect_status.innerText = '收藏';
               }else{
-                collect_status.innerText = 'forked';
+                collect_status.innerText = '已收藏';
               }
             }
           });

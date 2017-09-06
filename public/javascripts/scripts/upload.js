@@ -183,10 +183,9 @@ define(['GM'],function (GM){
 
       e.preventDefault();
       // get filelist
-      let fileList = e.dataTransfer.files;
-      console.log(fileList);
+      var fileList = e.dataTransfer.files;
       if(fileList.length === 0 || fileList[0].type.indexOf('image') === -1){
-        let tips_drag = '请拖入正确数量本地图片文件';
+        var tips_drag = '请拖入正确数量本地图片文件';
 
         navigator_off(tips_drag);
         return;

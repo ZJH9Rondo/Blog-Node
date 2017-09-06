@@ -12,7 +12,6 @@ block content
           img(src='/img/#{user.avatar}')
       p.editor
         a(href='/posts?author=#{user._id}',data-title='',data-content='#{user.bio}')  #{user.name}
-
       div.create-form
         form.ui.form.segment(method='post',action='/create/submit?author=#{user._id}',enctype='multipart/form-data')
           div.field.required

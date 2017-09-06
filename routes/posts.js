@@ -10,6 +10,16 @@ var CommentModel = require('../models/comments'); // 留言模块
 // 权限检查
 var checkLogin = require('../middlewares/check').checkLogin;
 
+// xss简单字符转换防范
+function encodeHTML(str){
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&qout")
+    .replace(/'/g,"#39");
+}
+
 // 文章页
 router.get('/posts',function (req,res,next){
   // author 区分用户页和主页
@@ -178,7 +188,7 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
     // 基本信息
     var author = req.query.author;
     var title = req.fields.title;
-    var content = req.fields.content;
+    var content = encodeHTML(req.fields.content);
     var favourite = [];
 
     // 校验数据合法性
@@ -276,7 +286,7 @@ router.post('/article/edit/finish', checkLogin, function(req, res, next) {
   var postId = req.query.postId;
   var author = req.session.user._id;
   var title = req.fields.title;
-  var content = req.fields.content;
+  var content = encodeHTML(req.fields.content);
 
   PostModel.updatePostById(postId, author, { title: title, content: content })
   .then(function () {
@@ -305,7 +315,7 @@ router.get('/article/remove', checkLogin, function(req, res, next) {
 router.post('/article/addComment', checkLogin, function(req, res, next) {
   var author = req.session.user._id;
   var postId = req.query.postId;
-  var content = req.fields.content;
+  var content = encodeHTML(req.fields.content);
   var comment = {
       author: author,
       postId: postId,

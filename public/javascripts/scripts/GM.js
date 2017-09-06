@@ -68,6 +68,16 @@ define(function(){
             }
           },
 
+          // xss简单非法字符转换
+          encodeHTML: function (str){
+            return String(str)
+              .replace(/&/g,"&amp;")
+              .replace(/</g,"&lt;")
+              .replace(/>/g,"&gt;")
+              .replace(/"/g,"&qout")
+              .replace(/'/g,"#39");
+          },
+
           // 封装Ajax [跨域,同源]
           ajax: function (){
              var  xhr, // 全局变量

@@ -10,6 +10,16 @@ var oAuth_github = require('../config/oAuth_github');
 
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 
+// xss简单字符转换防范
+function encodeHTML(str){
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&qout")
+    .replace(/'/g,"#39");
+}
+
 // GET /signin 登录页
 router.get('/signin', checkNotLogin, function(req, res, next) {
     res.render('signin');
@@ -18,7 +28,7 @@ router.get('/signin', checkNotLogin, function(req, res, next) {
 // POST /signin 用户登录
 router.post('/signin', checkNotLogin, function(req, res, next) {
 
-  var name = req.fields.name;
+  var name = encodeHTML(req.fields.name);
   var password = req.fields.password;
   var pwdFlag = scrypt.hashSync(key,{"N":16,"r":1,"p":1},64,'password').toString('hex');
 
@@ -80,7 +90,6 @@ router.get('/checkoAuth',function (req,res,next){
             }
           };
 
-          console.log(options.url);
           request.get(options,function (err,response,data){
             if(err){
               throw err;

@@ -2,153 +2,54 @@
 
 ## 基于Node的博客系统
 
-###  功能模块
-
-  * 开发环境: ubuntu 16.04
-  * Web框架: Express 4
-  * 会话机制: express-session
-  * 存储session: connect-mongo
-  * 通知提示中间件: connect-flash
-  * 模板引擎: jade
-  * 表单及图片上传中间件: express-formidable
-  * 配置文件读取: config-lite
-  * markdown解析中间件: marked
-  * 时间格式化: moment
-  * mongodb驱动: mongolass
-  * 根据ObojectId生成时间戳: Obojectid-to-timestamp
-  * md5加密: scrypt
-  * 日志: winston
-  * Express日志中间件: express-windston
-  * gitignore过滤文件
-  * 配置基本单元测试: mocha 和 supertest
-  * 基于 stylus 进行css的预编译
-  * gulp构建自动化
-  * requirejs模块化加载
-  * 七牛图床存取文章图片资源
-
-### 改动
-  * 通过在github看了一些关于在Express中通过scrypt对注册密码进行hash加密的使用,对原本项目中的加密方法进行了更改
-
-  * 开源项目的模板是模板引擎是基于ejs，但是在此项目是基于jade模板引擎，对于其中的模板变量需要更改为jade的语法，详见jade模板指南
-
-  * 加入article单独文章页面，基于stylus预编译对views的css进行了重构，其中有一个stylus的纯方法文件，作为依赖@import到各个所需的styl预编译文件中
-
-  * 配置gulp,在gulp中配置了对.styl后缀的预编译文件进行预编译并将导出的css文件压缩
-
-  * 修改nav的跳转路径,防止在非首页页面时,受路由影响出现跳转错误
-
-  * 博客基于AMD规范，模块化加载js文件,详见问题归纳4
-
-  * 封装一个简易的Ajax，能满足基本使用，如果实际生产环境，还是建议使用jquery的ajax
-
-  * 添加用户收藏文章功能，添加独立的用户文章收藏集页面，读取当前登录用户收藏的文章。
-    > 之前由于是表单上传使用的开源中间件，但此中间件存在Bug会直接导致请求响应出现重写响应头的Bug，最后根据此库还未合并的Pr说明
-
-    > 更改了本地的lib文件，Bug修复，此功能正常使用，但因为数据量小，也还没优化，还在学习改进中。
-
-  * 文章创建/编辑页面支持复制粘贴插入图片（当前复制粘贴功能只支持chrome，很快会适配其余浏览器），读取图片，以base64格式上传至七牛云，调取上传成功后七牛默认的返回key值转换为加载链接，并以markdown语法格式插入编辑区域，保存文章后加载直接读取七牛图床数据，之后上线会引入CDN。
-  > 后端获取Uptoken配置文件
-
-   ```js
-      // /config/qiniu_user.js
-       module.exports = {
-        'ACCESS_Key': '你当前七牛的accessKey',
-        'SECRET_Key': '你当前七牛的secertKey',
-        'OPTIONS': {
-          scope: '你七牛目的空间的Bucket'
-        }
-      };
-   ```
-  > 前端ajax参数设置
-
+### 如何使用
+  * 将当前项目文件克隆至本地
   ```js
-      // 客户端直传函数
-      function upload_base64(base64_str,upload_url,token){
-        var pic = base64_str,
-            url = upload_url,
-            xhr = new XMLHttpRequest();
-
-        xhr.onreadystatechange = function (){
-          if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200){
-              var img = JSON.parse(xhr.responseText),
-                  Imgsrc = '你七牛存储空间的自定义域名或者当前所绑定的域名' + img.key;
-
-              markdown_IMG(Imgsrc);
-          }
-        };
-        xhr.open("POST",url,true);
-        xhr.setRequestHeader("Content-Type", "application/octet-stream");
-        xhr.setRequestHeader("Authorization",'UpToken' + ' ' + token);
-        xhr.send(pic);
-     }
-
-     // 获取token
-     Ajax.init({
-       url: '/getToken',
-       method: 'get',
-       datatype: 'json',
-       success: function (result){
-
-       base64_str = base64_str.replace(/^data:image\/\w+;base64,/, '');
-
-       // 根据七牛开发文档描述，当前目的存储空间位置不同(华南、华北、北美)，'*****'对应值不同
-       // 根据需要自行更改
-       upload_url = 'http://*******.qiniu.com/putb64/' + imageFile.size;
-       result = JSON.parse(result);
-       upToken = result.token;
-       // 上传文件
-       upload_base64(base64_str,upload_url,upToken);
-     }
+    git clone git@github.com:ZJH9Rondo/Blog-Node.git
   ```
-* 加入拖拽上传图片并返回插入markdown语法文件，将图片上传至七牛云，方法同上。
+  * 在/Blog目录下执行
+  ```js
+    npm install -g
+  ```
+  * 根据下文模块开发介绍，配置第三方认证及上传七牛图床所需配置文件，还有本地Mongodb的安装及配置
+  * 执行下述命令前，默认您已满足前述所有条件
+  ```js
+    node ./bin/www
+  ```
+  * 当人如果更改样式表及js，在/Blog目录下终端运行
+  ```js
+    gulp
+  ```
 
-* 支持github第三方登录功能，存在问题(未对oAuth的最后一步验证的access_token实现加密)
+### 功能模块
+  * 1.支持Github第三方认证登录
+  * 2.调取Github官方Api接口，获取用户responsities信息并展示，提供访问用户Github主页Floow按钮
+  * 3.支持本地用户注册个人账号登录
+  * 4.支持用户收藏文章与用户个人文章收藏集的管理
+  * 5.支持用户个人页面文章管理
+  * 6.支持用户对文章点赞功能并点赞计数
+  * 7.支持文章图片上传至七牛云并返回Markdown格式插入文本
+  * 8.支持编辑文章期间针对不同浏览器支持程度加入对图片的复制粘贴上传和拖拽图片上传
+  * 9.支持简单的响应式页面
+  * 10.支持用户留言评论及对留言的管理功能（暂时不支持对留言的回复功能）
+  * 11.对用户输入做了简单的xss防御转换处理
 
-### 问题归纳:
-  * 1.在从数据库读取博文Content时，默认jade引擎读取文本为html字符串？
-    > 问题描述： 由于在上传文章时，用插件将markdown转变成了html，在从数据库读取的时候，由于默认模板引擎用的是jade，所以导致读取后显示在文本中的是包含标签的字符串
+### 模块开发介绍
+  * [第三方认证登陆实现](https://github.com/ZJH9Rondo/Blog-Node/wiki/Github%E7%AC%AC%E4%B8%89%E6%96%B9%E8%AE%A4%E8%AF%81%E7%99%BB%E5%BD%95%E5%AE%9E%E7%8E%B0Github)
 
-    > 解决: 由于使用了 #{post.content} 传入数据，读取直接包含了标签信息。将变量读取从
-    > #{post.content} 更改为 ！=post.content 即可正常
+  * [Github第三方Api接口调用](https://github.com/ZJH9Rondo/Blog-Node/wiki/%E5%85%B3%E4%BA%8EGithub%E5%AE%98%E6%96%B9Api%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8)
 
-  * 2.在留言功能的页面改动时，需要仔细写jade文件，否则会出现很多错误导致页面无法正常读取值，无法正常显示。
+  * [文章图片管理](https://github.com/ZJH9Rondo/Blog-Node/wiki/%E6%96%87%E7%AB%A0%E5%9B%BE%E7%89%87%E7%AE%A1%E7%90%86)
 
-  * 3.测试用例只包含很少一部分，做了少量注册适用性测试用例，待完善。
+  * [用户个人文章页面](https://github.com/ZJH9Rondo/Blog-Node/wiki/%E7%94%A8%E6%88%B7%E4%B8%AA%E4%BA%BA%E6%96%87%E7%AB%A0%E9%A1%B5%E9%9D%A2)
 
-  * 4.对于requirejs的使用,使用前需要理解其加载原理，为什么要基于AMD规范异步加载js,相比CMD的同步加载和原始加载方法有什么优势,一开始应该如何规划文件模块。
-    * 配置加载路径
-       ```
-         javascripts
-          |-scripts
-          |   |--GM.js
-          |   |--nav.js
-          |
-          |-application.js
-          |-require.js
-       ```
-    * 关于application.js的配置
+  * [用户收藏文章与个人文章收藏集管理实现](https://github.com/ZJH9Rondo/Blog-Node/wiki/用户收藏文章与个人文章收藏集管理实现)
 
-  * 5.关于封装Ajax
-    > 由于这个项目目的为了尽可能在开发的时候考虑周全,加之练习和巩固对原生javascript的学习,就基于js高及程序设计的学习,对Ajax做了一个简单的封装,对跨域以及同源都做了处理,IE中的 ActiveXObject 也做了兼容,最后尽可能不依赖JQ和bootstrap
+  * [用户文章点赞功能实现](https://github.com/ZJH9Rondo/Blog-Node/wiki/%E7%94%A8%E6%88%B7%E6%96%87%E7%AB%A0%E7%82%B9%E8%B5%9E%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0)
 
-    >Ps: 目前引入 JQ 和 Bootstrap 是重点放在 js 和 后台上,页面暂放。
+  * [用户本地注册及登录实现](https://github.com/ZJH9Rondo/Blog-Node/wiki/用户本地注册及登录实现)
 
-    * 项目使用:
-      ```
-        var Ajax = GM.ajax();
+  * [用户留言功能](https://github.com/ZJH9Rondo/Blog-Node/wiki/用户留言功能)
 
-        Ajax({
-          url: "",
-          datatype: "",
-          method: "",
-          timeout: ***,
-          data: "",
-          success: function (data){
-            // 逻辑代码
-          }
-        });
-      ```
-
-  * 6.sessionStorage 和 localStorage
-    > 博客首页需要从github验证登录获取个人数据信息，进行处理展示,为了保证github信息更新能及时同步到博客页面,同时又避免在数据最新状态下发送不必要的请求,选择了使用sessionStorage 缓存爬取的数据,不用localStorage 是为了保证重开浏览器开启会话更新,但在会话未关闭状态下不再发送抓取请求,
-    （极端情况除外）
+  * [粘贴和拖拽上传图片](https://github.com/ZJH9Rondo/Blog-Node/wiki/用户留言功能)
+  

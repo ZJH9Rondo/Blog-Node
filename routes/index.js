@@ -2,7 +2,7 @@
 module.exports = function(app){
     // 首页请求
     app.get('/',function(req,res,next){
-       res.render('index');
+       res.redirect('posts');
 
     });
 

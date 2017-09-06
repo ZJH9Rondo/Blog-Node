@@ -8,6 +8,16 @@ var key = new Buffer('Rondo Blog'); // 用于 scrypt hash加密
 var UserModel = require('../models/users');
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 
+// xss简单字符转换防范
+function encodeHTML(str){
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&qout")
+    .replace(/'/g,"#39");
+}
+
 // GET /signup 注册页
 router.get('/signup', checkNotLogin, function(req, res, next) {
   res.render('signup');
@@ -51,9 +61,9 @@ router.post('/signup', checkNotLogin, function(req, res, next) {
 
   // 实例化用户信息
   var user = {
-    name: name,
+    name: encodeHTML(name),
     password: password,
-    bio: bio,
+    bio: encodeHTML(bio),
     avatar: avatar
   };
 
