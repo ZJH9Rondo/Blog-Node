@@ -25,6 +25,7 @@ router.get('/signup', checkNotLogin, function(req, res, next) {
 
 // POST /signup 用户注册
 router.post('/signup', checkNotLogin, function(req, res, next) {
+  console.log('MT',req);
   var name = req.fields.name;
   var bio = req.fields.bio;
   var avatar = req.files.avatar.path.split(path.sep).pop();
@@ -83,6 +84,7 @@ router.post('/signup', checkNotLogin, function(req, res, next) {
 
       UserModel.createCollect(collectItem).then(function (){
         // 写入 flash
+        console.log('111');
         req.flash('success', '注册成功');
       });
       // 跳转到首页

@@ -29,9 +29,6 @@ app.use(cookieParser());
 // 默认模板目录
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 显示通知中间件
-app.use(flash());
-
 // session
 app.use(session({
   name:config.session.key, // 设置cookie中保存session id的字段名称
@@ -52,6 +49,9 @@ app.locals.blog = {
   title: pkg.name,
   description: pkg.description
 };
+
+// 显示通知中间件
+app.use(flash());
 
 // 添加模板必需的三个变量
 app.use(function (req, res, next) {

@@ -5,6 +5,11 @@ var Collects = require('../lib/mongo').Collects; // 文章收藏模块
 
 var CommentModel = require('./comments');
 
+marked.setOptions({
+  highlight: function (code) {
+      return require('highlightjs').highlightAuto(code).value
+  }
+})
 // 给 post 添加留言数 commentsCount
 Post.plugin('addCommentsCount', {
   afterFind: function (posts) {

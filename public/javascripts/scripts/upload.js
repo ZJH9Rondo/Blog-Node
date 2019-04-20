@@ -70,10 +70,7 @@ define(['GM'],function (GM){
           xhr.onreadystatechange = function (){
             if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200){
                 var img = JSON.parse(xhr.responseText),
-                    //Imgsrc = 'http://ou6y87mzi.bkt.clouddn.com/' + img.key;
-                    // 测试链接
-                    Imgsrc= 'http://7xqqm5.com1.z0.glb.clouddn.com/' + img.key;
-
+                    Imgsrc = 'http://cdn.wangbing520.club/' + img.key;
                 markdown_IMG(Imgsrc);
             }
           };
@@ -109,7 +106,7 @@ define(['GM'],function (GM){
 
             base64_str = base64_str.replace(/^data:image\/\w+;base64,/, '');
             // 测试链接
-            upload_url = 'http://upload.qiniu.com/putb64/' + img_origin.size;
+            upload_url = 'http://upload-z2.qiniu.com/putb64/' + img_origin.size;
             UpToken = token;
             // upload Image
             upload_base64(base64_str,upload_url,UpToken);

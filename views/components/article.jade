@@ -33,20 +33,17 @@ div.ui.items
               i.thumbs.outline.up.icon
             span #{post.favourite_count}
           button.mini.ui.primary.button.addcollect(author='#{user._id}',post='#{post._id}')
-            if collections
-              - var flag = false
-              - var i = 0
-              - for(;i<collections.length;i++){
-                  if post._id == collections[i]
-                  - flag = true
-                  - break
-              - }
+            -var flag = false
+            -var i = 0
+            -for(;i<collections.length;i++){
+              if post._id == collections[i]
+                -flag = true
+                -break
+            -}
               if flag
                 span 已收藏
               else
                 span 收藏
-            else
-              span 收藏
 if user
   div.ui.comments
     h3.ui.dividing.header 留言

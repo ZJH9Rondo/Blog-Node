@@ -32,8 +32,7 @@ router.get('/posts',function (req,res,next){
         var authorCollected = req.session.user._id;
 
         PostModel.getCollections(authorCollected).then(function (result){
-          var collections = result.collections;
-
+          var collections = result.collections　|| [];
            res.render('posts', {
               posts: posts,      // 识别当前登录用户
               collections: collections
@@ -206,13 +205,13 @@ router.post('/create/submit', checkLogin, function(req, res, next) {
 
   // blog _post实体 当前
   var post = {
-   author: author,
-   title: title,
-   content: content,
-   pv: 0,
-   favourite: favourite,
-   favourite_count: 0
- };
+    author: author,
+    title: title,
+    content: content,
+    pv: 0,
+    favourite: favourite,
+    favourite_count: 0
+  };
 
  PostModel.create(post)
     .then(function (result) {

@@ -41,19 +41,16 @@ block content
                 i.thumbs.outline.up.icon
               span #{collect.favourite_count}
             button.mini.ui.primary.button.addcollect(author='#{user._id}',post='#{collect._id}')
-              if collections
-                - var flag = false
-                - var check_fork = collections
-                - var j = 0
-                - for(;j<check_fork.length;j++){
-                    if collect._id == check_fork[j]
-                    - flag = true
-                    - break
-                - }
+              - var flag = false
+              - var check_fork = collections
+              - var j = 0
+              - for(;j<check_fork.length;j++){
+                  if collect._id == check_fork[j]
+                  - flag = true
+                  - break
+              - }
                 if flag
-                  i forked
+                  i 已收藏
                 else
-                  i forks
-              else
-                i forks
+                  i 收藏
         -}

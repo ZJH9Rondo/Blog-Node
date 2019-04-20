@@ -76,4 +76,4 @@
 
   * [用户留言功能](https://github.com/ZJH9Rondo/Blog-Node/wiki/用户留言功能)
 
-  * [粘贴和拖拽上传图片](https://github.com/ZJH9Rondo/Blog-Node/wiki/用户留言功能)
+  * [粘贴和拖拽上传图片](https://github.com/ZJH9Rondo/Blog-Node/wiki/%E7%B2%98%E8%B4%B4%E5%92%8C%E6%8B%96%E6%8B%BD%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87)

@@ -3,7 +3,8 @@ extends index
 block content
   div.content
     div.signup_form
-        form.ui.form.segment(method='POST',enctype='multipart/form-data')
+        include components/flash
+        form.ui.form.segment(method='POST',enctype='multipart/form-data',action='/signup')
           div.field.required
             lable 用户名
             input(placeholder='用户名',type='text',name='name')

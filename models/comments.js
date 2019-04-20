@@ -2,11 +2,17 @@
 var marked = require('marked');
 var Comment = require('../lib/mongo').Comment;
 
+marked.setOptions({
+  highlight: function (code) {
+      return require('highlightjs').highlightAuto(code).value
+  }
+})
 // 将 comment 的 content 从 markdown 转换成 html
 Comment.plugin('contentToHtml', {
   afterFind: function (comments) {
     return comments.map(function (comment) {
       comment.content = marked(comment.content);
+      console.log(comment.content)
       return comment;
     });
   }
